@@ -794,7 +794,7 @@ async function loadAll() {
   document.getElementById('leg-table-wrap').innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
   try {
     const [submissions, legacy] = await Promise.all([
-      fetchTable('form_submissions', 'id,submitted_at,checkout_completed_at,name,email,organisation_name,organisation_type,country,form_name,source_site,license_type,film_cut,group_size,valid_window,screening_date,promo_applied,stripe_price_id,stripe_event_id,forwarded,forward_status,wonder_redemption_code'),
+      fetchTable('form_submissions', 'id,submitted_at,checkout_completed_at,name,email,organisation_name,organisation_type,country,form_name,source_site,license_type,film_cut,group_size,valid_window,screening_date,promo_applied,stripe_price_id,stripe_event_id,forwarded,forward_status,wonder_redemption_code,wonder_redemption_code_id,redirect_url,payload'),
       fetchTable('limelight_legacy_registrations')
     ]);
     allSubmissions = submissions.sort((a,b) => new Date(b.submitted_at) - new Date(a.submitted_at));
@@ -952,20 +952,65 @@ function renderPagination(id, total, current, onPage) {
   el.innerHTML = `<button class="page-btn" onclick="(${onPage.toString()})(${current-1})" ${current===1?'disabled':''}>‹ Prev</button><span class="page-info">Page ${current} of ${pages}</span><button class="page-btn" onclick="(${onPage.toString()})(${current+1})" ${current===pages?'disabled':''}>Next ›</button>`;
 }
 
-function openSubmissionModal(id) {
+async function openSubmissionModal(id) {
   const s = allSubmissions.find(x => x.id===id); if (!s) return;
   const paid = !!s.checkout_completed_at;
   const badge = paid ? '<span class="badge badge-green">Paid</span>' : '<span class="badge badge-orange">Pending Payment</span>';
   document.getElementById('modal-title').textContent = s.name || 'Submission Details';
   const cioHref = s.email ? `https://fly.customer.io/workspaces/${CIO_WS}/journeys/people/${encodeURIComponent(s.email)}/sent` : null;
+
+  // Payload fields — render nicely
+  let payloadHtml = '';
+  if (s.payload && typeof s.payload === 'object') {
+    const skip = new Set(['film','form-id','event_key']);
+    const entries = Object.entries(s.payload).filter(([k,v]) => !skip.has(k) && v !== null && v !== '' && v !== false);
+    if (entries.length) {
+      payloadHtml = `<div class="detail-group"><div class="detail-group-title">Form Data</div>`;
+      entries.forEach(([k,v]) => { payloadHtml += dr(k.replace(/-/g,' ').replace(/_/g,' '), v); });
+      payloadHtml += '</div>';
+    }
+  }
+
+  // Wonder code — fetch live
+  let wonderHtml = '';
+  if (s.wonder_redemption_code_id) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/wonder_redemption_codes?id=eq.${s.wonder_redemption_code_id}&select=code,redemptions_bought,redemptions_available,redemptions_used,license_type,created_at`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      const codes = await res.json();
+      if (codes && codes[0]) {
+        const c = codes[0];
+        wonderHtml = `<div class="detail-group"><div class="detail-group-title">Wonder Redemption Code</div>
+          ${dr('Code', `<span style="font-family:monospace;font-size:14px;font-weight:700;color:var(--fire);letter-spacing:0.1em">${esc(c.code)}</span>`)}
+          ${dr('Redemptions Bought', c.redemptions_bought)}
+          ${dr('Redemptions Available', c.redemptions_available)}
+          ${dr('Redemptions Used', c.redemptions_used)}
+          ${dr('Licence Type', c.license_type)}
+          ${dr('Created', c.created_at ? fmtDateFull(c.created_at) : '—')}
+        </div>`;
+      }
+    } catch(e) { /* silent */ }
+  } else if (s.wonder_redemption_code) {
+    wonderHtml = `<div class="detail-group"><div class="detail-group-title">Wonder Code</div>${dr('Code', s.wonder_redemption_code)}</div>`;
+  }
+
+  // Redirect URL
+  const redirectHtml = s.redirect_url
+    ? `<div class="detail-group"><div class="detail-group-title">Redirect</div><div class="detail-row"><div class="detail-key">Checkout URL</div><div class="detail-val" style="word-break:break-all"><a href="${esc(s.redirect_url)}" target="_blank" style="color:var(--fire);text-decoration:none;font-size:12px;">${esc(s.redirect_url)}</a></div></div></div>`
+    : '';
+
   document.getElementById('modal-body').innerHTML = `
-    <div style="margin-bottom:18px;display:flex;gap:10px;align-items:center;">${badge}${cioHref ? `<a href="${cioHref}" target="_blank" class="cio-link" style="font-size:13px;">View Email Deliveries →</a>` : ''}</div>
+    <div style="margin-bottom:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">${badge}${cioHref ? `<a href="${cioHref}" target="_blank" class="cio-link" style="font-size:13px;">View Email Deliveries →</a>` : ''}</div>
     <div class="detail-group"><div class="detail-group-title">Contact</div>
       ${dr('Name',s.name)}${dr('Email',s.email)}${dr('Organisation',s.organisation_name)}${dr('Org Type',s.organisation_type)}${dr('Country',s.country)}</div>
     <div class="detail-group"><div class="detail-group-title">Licence</div>
-      ${dr('Film',filmLabel(s.form_name))}${dr('Source Site',s.source_site)}${dr('Licence Type',s.license_type)}${dr('Film Cut',s.film_cut)}${dr('Group Size',s.group_size)}${dr('Valid Window',s.valid_window)}${dr('Screening Date',s.screening_date)}${dr('Promo Applied',s.promo_applied?'Yes':'No')}${dr('Wonder Code',s.wonder_redemption_code)}</div>
+      ${dr('Film',filmLabel(s.form_name))}${dr('Source Site',s.source_site)}${dr('Licence Type',s.license_type)}${dr('Film Cut',s.film_cut)}${dr('Group Size',s.group_size)}${dr('Valid Window',s.valid_window)}${dr('Screening Date',s.screening_date)}${dr('Promo Applied',s.promo_applied?'Yes':'No')}</div>
+    ${wonderHtml}
+    ${redirectHtml}
     <div class="detail-group"><div class="detail-group-title">Payment</div>
       ${dr('Submitted',s.submitted_at?fmtDateFull(s.submitted_at):'—')}${dr('Checkout Completed',s.checkout_completed_at?fmtDateFull(s.checkout_completed_at):'Not completed')}${dr('Stripe Event',s.stripe_event_id,true)}${dr('Stripe Price ID',s.stripe_price_id,true)}</div>
+    ${payloadHtml}
     <div class="detail-group"><div class="detail-group-title">System</div>
       ${dr('ID',s.id,true)}${dr('Forwarded',s.forwarded?'Yes':'No')}${dr('Forward Status',s.forward_status)}</div>`;
   openModal();
