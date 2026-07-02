@@ -46,6 +46,54 @@
     transition: background 0.2s, color 0.2s;
   }
 
+  /* ── MOBILE TOPBAR ── */
+  .mobile-bar {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: var(--slate2);
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 200;
+  }
+
+  .mobile-bar .mob-logo { height: 24px; width: auto; object-fit: contain; }
+  .mobile-bar .mob-logo-text { font-size: 14px; font-weight: 700; color: var(--white); letter-spacing: -0.02em; }
+
+  .hamburger {
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    width: 36px; height: 36px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 18px; height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+
+  /* Drawer overlay */
+  .drawer-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 149;
+  }
+
+  .drawer-overlay.open { display: block; }
+
   /* ── SIDEBAR ── */
   .sidebar {
     width: var(--sidebar-w);
@@ -55,7 +103,7 @@
     flex-direction: column;
     position: fixed;
     top: 0; left: 0; bottom: 0;
-    z-index: 100;
+    z-index: 150;
   }
 
   .sidebar-logo {
@@ -141,6 +189,65 @@
     flex-direction: column;
     min-height: 100vh;
     background: var(--slate);
+  }
+
+  /* ── MOBILE RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .mobile-bar { display: flex; }
+
+    .sidebar {
+      top: 0;
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      width: 80vw;
+      max-width: 300px;
+      padding-top: 56px;
+    }
+
+    .sidebar.open { transform: translateX(0); }
+
+    .main {
+      margin-left: 0;
+      padding-top: 56px;
+    }
+
+    .topbar {
+      display: none;
+    }
+
+    .content {
+      padding: 16px 14px;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .stat-value { font-size: 26px; }
+
+    .filters {
+      padding: 12px 14px;
+      gap: 8px;
+    }
+
+    .search-wrap { max-width: 100%; }
+
+    .filter-select { min-width: 0; font-size: 12px; }
+
+    thead th { font-size: 9px; padding: 9px 10px; }
+    tbody td { padding: 10px 10px; font-size: 12px; }
+
+    .modal-panel { width: 100vw; }
+
+    /* Mobile topbar actions inside the drawer */
+    .mob-topbar-actions {
+      display: flex;
+      gap: 8px;
+      padding: 12px 14px;
+      border-top: 1px solid var(--line);
+    }
   }
 
   .topbar {
@@ -559,7 +666,24 @@
 </head>
 <body>
 
-<aside class="sidebar">
+<!-- MOBILE TOP BAR -->
+<div class="mobile-bar">
+  <img class="mob-logo" src="https://cdn.prod.website-files.com/60bff930d512a35b704b11f0/672307b15bce0246f6e1ef95_unnamed.avif" alt="Heritage Films" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+  <span class="mob-logo-text" style="display:none">Heritage Films</span>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <button class="theme-toggle" onclick="toggleTheme()" style="padding:6px 10px;font-size:11px;">
+      <span class="toggle-icon" id="theme-icon-mob">☀️</span>
+    </button>
+    <button class="hamburger" onclick="toggleDrawer()" id="hamburger-btn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</div>
+
+<!-- DRAWER OVERLAY -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <img src="https://cdn.prod.website-files.com/60bff930d512a35b704b11f0/672307b15bce0246f6e1ef95_unnamed.avif" alt="Heritage Films"
       onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
@@ -577,6 +701,9 @@
       <span class="badge-count" id="nav-leg-count">—</span>
     </button>
   </nav>
+  <div class="mob-topbar-actions">
+    <button class="refresh-btn" onclick="loadAll();closeDrawer()" style="flex:1;justify-content:center;">↻ Refresh</button>
+  </div>
   <div class="sidebar-footer">Refreshed <span id="last-loaded">—</span></div>
 </aside>
 
@@ -1053,7 +1180,31 @@ function switchTab(tab) {
   document.getElementById('nav-submissions').classList.toggle('active', tab==='submissions');
   document.getElementById('nav-legacy').classList.toggle('active', tab==='legacy');
   document.getElementById('page-title').textContent = tab==='submissions' ? 'Licence Submissions' : 'Legacy Registrations (Limelight)';
+  closeDrawer();
 }
+
+function toggleDrawer() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('drawer-overlay');
+  const isOpen = sidebar.classList.contains('open');
+  sidebar.classList.toggle('open', !isOpen);
+  overlay.classList.toggle('open', !isOpen);
+}
+
+function closeDrawer() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+
+const origToggleTheme = toggleTheme;
+toggleTheme = function() {
+  isDark = !isDark;
+  document.body.classList.toggle('light', !isDark);
+  const icon = isDark ? '☀️' : '🌙';
+  const label = isDark ? 'Light' : 'Dark';
+  ['theme-icon','theme-icon-mob'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = icon; });
+  const lbl = document.getElementById('theme-label'); if(lbl) lbl.textContent = label;
+};
 
 function esc(s) {
   if (!s && s!==0) return '';
