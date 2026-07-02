@@ -4,39 +4,40 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Licence Dashboard — Heritage Films</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --navy: #1a1a2e;
-    --navy-light: #16213e;
-    --accent: #e94560;
-    --accent-hover: #c73652;
-    --bg: #f4f5f7;
-    --surface: #ffffff;
-    --border: #e2e4e9;
-    --text: #1a1a2e;
-    --muted: #6b7280;
-    --green: #10b981;
-    --orange: #f59e0b;
-    --red: #ef4444;
-    --blue: #3b82f6;
-    --sidebar-w: 220px;
+    --slate:    #0d1117;
+    --slate2:   #151b23;
+    --slate3:   #1c242e;
+    --fire:     #FF921E;
+    --fire-dim: rgba(255,146,30,0.12);
+    --white:    #ffffff;
+    --nimbus:   #F2F2F2;
+    --dim:      rgba(255,255,255,0.55);
+    --line:     rgba(255,255,255,0.06);
+    --green:    #10b981;
+    --orange:   #f59e0b;
+    --red:      #ef4444;
+    --sidebar-w: 224px;
+    --helv: "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
 
   body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
-    color: var(--text);
+    font-family: var(--helv);
+    background: var(--slate);
+    color: var(--white);
     min-height: 100vh;
     display: flex;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* SIDEBAR */
+  /* ── SIDEBAR ── */
   .sidebar {
     width: var(--sidebar-w);
-    background: var(--navy);
+    background: var(--slate2);
+    border-right: 1px solid var(--line);
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -45,51 +46,49 @@
   }
 
   .sidebar-logo {
-    padding: 24px 20px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 28px 22px 22px;
+    border-bottom: 1px solid var(--line);
   }
 
-  .sidebar-logo .brand {
-    color: #fff;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    line-height: 1.2;
+  .sidebar-logo img {
+    height: 30px;
+    width: auto;
+    object-fit: contain;
   }
 
   .sidebar-logo .sub {
-    color: var(--accent);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
+    color: var(--fire);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    margin-top: 3px;
+    margin-top: 8px;
   }
 
   .sidebar-nav {
-    padding: 16px 12px;
+    padding: 18px 12px;
     flex: 1;
   }
 
   .nav-label {
-    color: rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.28);
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 0 8px;
+    letter-spacing: 0.16em;
+    padding: 0 10px;
     margin-bottom: 8px;
-    margin-top: 16px;
+    margin-top: 18px;
   }
 
   .nav-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 9px 10px;
+    padding: 10px 12px;
     border-radius: 8px;
-    color: rgba(255,255,255,0.65);
-    font-size: 14px;
+    color: var(--dim);
+    font-size: 13.5px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.15s;
@@ -98,140 +97,162 @@
     background: none;
     width: 100%;
     text-align: left;
+    font-family: var(--helv);
+    letter-spacing: 0.01em;
   }
 
-  .nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
-  .nav-item.active { background: var(--accent); color: #fff; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+  .nav-item.active { background: var(--fire); color: var(--slate); }
 
-  .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+  .nav-item .icon { font-size: 15px; width: 20px; text-align: center; }
 
   .badge-count {
     margin-left: auto;
-    background: rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
     font-size: 11px;
-    font-weight: 600;
-    padding: 2px 7px;
+    font-weight: 700;
+    padding: 2px 8px;
     border-radius: 20px;
+    letter-spacing: 0.02em;
   }
 
-  .nav-item.active .badge-count { background: rgba(255,255,255,0.25); color: #fff; }
+  .nav-item.active .badge-count {
+    background: rgba(13,17,23,0.25);
+    color: var(--slate);
+  }
 
   .sidebar-footer {
-    padding: 16px 20px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    color: rgba(255,255,255,0.35);
+    padding: 18px 22px;
+    border-top: 1px solid var(--line);
+    color: rgba(255,255,255,0.28);
     font-size: 11px;
+    letter-spacing: 0.02em;
   }
 
-  /* MAIN CONTENT */
+  /* ── MAIN ── */
   .main {
     margin-left: var(--sidebar-w);
     flex: 1;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background: var(--slate);
   }
 
   .topbar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 28px;
+    background: rgba(13,17,23,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    padding: 0 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 68px;
     position: sticky;
     top: 0;
     z-index: 50;
   }
 
   .topbar h1 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
-    color: var(--navy);
+    color: var(--white);
+    letter-spacing: 0.01em;
   }
 
-  .topbar .refresh-btn {
-    background: var(--navy);
-    color: #fff;
+  .topbar .eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fire);
+    margin-bottom: 3px;
+  }
+
+  .refresh-btn {
+    background: var(--fire);
+    color: var(--slate);
     border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
+    padding: 9px 20px;
+    border-radius: 999px;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 700;
     cursor: pointer;
-    font-family: inherit;
-    transition: background 0.15s;
+    font-family: var(--helv);
+    letter-spacing: 0.04em;
+    transition: opacity 0.15s;
     display: flex;
     align-items: center;
     gap: 6px;
   }
 
-  .topbar .refresh-btn:hover { background: var(--accent); }
+  .refresh-btn:hover { opacity: 0.85; }
 
   .content {
-    padding: 24px 28px;
+    padding: 28px 32px;
     flex: 1;
   }
 
-  /* STAT CARDS */
+  /* ── STAT CARDS ── */
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 14px;
     margin-bottom: 28px;
   }
 
   .stat-card {
-    background: var(--surface);
+    background: var(--slate2);
     border-radius: 12px;
-    padding: 20px;
-    border: 1px solid var(--border);
-    transition: box-shadow 0.15s;
+    padding: 22px 20px;
+    border: 1px solid var(--line);
+    transition: border-color 0.15s;
   }
 
-  .stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .stat-card:hover { border-color: rgba(255,146,30,0.25); }
 
   .stat-label {
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 10px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--muted);
-    margin-bottom: 10px;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.38);
+    margin-bottom: 12px;
   }
 
   .stat-value {
-    font-size: 32px;
+    font-size: 34px;
     font-weight: 700;
-    color: var(--navy);
+    color: var(--white);
     line-height: 1;
+    letter-spacing: -0.02em;
   }
 
   .stat-sub {
     font-size: 12px;
-    color: var(--muted);
+    color: var(--dim);
     margin-top: 6px;
   }
 
-  .stat-card.accent .stat-value { color: var(--accent); }
+  .stat-card.fire .stat-value  { color: var(--fire); }
   .stat-card.green .stat-value { color: var(--green); }
-  .stat-card.orange .stat-value { color: var(--orange); }
+  .stat-card.orange .stat-value{ color: var(--orange); }
 
-  /* TAB PANEL */
+  /* ── PANEL ── */
   .panel {
-    background: var(--surface);
+    background: var(--slate2);
     border-radius: 14px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--line);
     overflow: hidden;
   }
 
-  /* FILTERS */
+  /* ── FILTERS ── */
   .filters {
     padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--line);
     display: flex;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
     align-items: center;
   }
@@ -240,7 +261,7 @@
     position: relative;
     flex: 1;
     min-width: 200px;
-    max-width: 360px;
+    max-width: 340px;
   }
 
   .search-wrap .icon {
@@ -248,52 +269,53 @@
     left: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--muted);
-    font-size: 14px;
+    color: rgba(255,255,255,0.3);
+    font-size: 13px;
     pointer-events: none;
   }
 
   .search-input {
     width: 100%;
-    padding: 9px 12px 9px 36px;
-    border: 1px solid var(--border);
+    padding: 9px 12px 9px 34px;
+    border: 1px solid var(--line);
     border-radius: 8px;
-    font-size: 14px;
-    font-family: inherit;
-    color: var(--text);
-    background: var(--bg);
+    font-size: 13.5px;
+    font-family: var(--helv);
+    color: var(--white);
+    background: var(--slate3);
     outline: none;
     transition: border-color 0.15s;
   }
 
-  .search-input:focus { border-color: var(--navy); }
+  .search-input::placeholder { color: rgba(255,255,255,0.28); }
+  .search-input:focus { border-color: rgba(255,146,30,0.5); }
 
   .filter-select {
     padding: 9px 12px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--line);
     border-radius: 8px;
-    font-size: 14px;
-    font-family: inherit;
-    color: var(--text);
-    background: var(--bg);
+    font-size: 13px;
+    font-family: var(--helv);
+    color: var(--white);
+    background: var(--slate3);
     outline: none;
     cursor: pointer;
-    min-width: 140px;
+    min-width: 130px;
   }
 
-  .filter-select:focus { border-color: var(--navy); }
+  .filter-select:focus { border-color: rgba(255,146,30,0.5); }
+  .filter-select option { background: var(--slate2); }
 
   .results-count {
     margin-left: auto;
-    font-size: 13px;
-    color: var(--muted);
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
     white-space: nowrap;
+    letter-spacing: 0.04em;
   }
 
-  /* TABLE */
-  .table-wrap {
-    overflow-x: auto;
-  }
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; }
 
   table {
     width: 100%;
@@ -302,108 +324,107 @@
   }
 
   thead th {
-    background: #f8f9fa;
-    padding: 11px 14px;
+    background: rgba(255,255,255,0.025);
+    padding: 11px 16px;
     text-align: left;
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 10px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.16em;
+    color: rgba(255,255,255,0.32);
+    border-bottom: 1px solid var(--line);
     white-space: nowrap;
     cursor: pointer;
     user-select: none;
   }
 
-  thead th:hover { color: var(--navy); }
-  thead th.sorted { color: var(--accent); }
+  thead th:hover { color: var(--fire); }
+  thead th.sorted { color: var(--fire); }
 
   tbody tr {
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--line);
     cursor: pointer;
     transition: background 0.1s;
   }
 
   tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: #f8fafc; }
+  tbody tr:hover { background: rgba(255,255,255,0.03); }
 
   tbody td {
-    padding: 11px 14px;
+    padding: 12px 16px;
     vertical-align: middle;
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--dim);
   }
 
-  .td-name { font-weight: 600; }
-  .td-email { color: var(--muted); }
-  .td-date { color: var(--muted); white-space: nowrap; }
+  .td-name { font-weight: 600; color: var(--white) !important; }
+  .td-date { white-space: nowrap; }
 
-  /* STATUS BADGES */
+  /* ── BADGES ── */
   .badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 3px 9px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     white-space: nowrap;
+    text-transform: uppercase;
   }
 
-  .badge::before { content: '●'; font-size: 8px; }
-  .badge-green { background: #d1fae5; color: #065f46; }
-  .badge-orange { background: #fef3c7; color: #92400e; }
-  .badge-red { background: #fee2e2; color: #991b1b; }
-  .badge-blue { background: #dbeafe; color: #1e40af; }
-  .badge-grey { background: #f3f4f6; color: #4b5563; }
+  .badge::before { content: '●'; font-size: 7px; }
+  .badge-green  { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+  .badge-orange { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+  .badge-red    { background: rgba(239,68,68,0.15);  color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+  .badge-grey   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.08); }
 
-  /* EMPTY STATE */
+  /* ── EMPTY ── */
   .empty-state {
     text-align: center;
-    padding: 60px 20px;
-    color: var(--muted);
+    padding: 70px 20px;
+    color: rgba(255,255,255,0.25);
   }
 
-  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
-  .empty-state p { font-size: 15px; }
+  .empty-state .icon { font-size: 36px; margin-bottom: 14px; }
+  .empty-state p { font-size: 14px; }
 
-  /* SPINNER */
-  .spinner-wrap {
-    text-align: center;
-    padding: 60px 20px;
-  }
+  /* ── SPINNER ── */
+  .spinner-wrap { text-align: center; padding: 70px 20px; }
 
   .spinner {
     display: inline-block;
-    width: 36px;
-    height: 36px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
+    width: 34px;
+    height: 34px;
+    border: 3px solid rgba(255,255,255,0.08);
+    border-top-color: var(--fire);
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+    animation: spin 0.75s linear infinite;
   }
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ERROR */
+  /* ── ERROR ── */
   .error-box {
-    background: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #fca5a5;
+    background: rgba(239,68,68,0.1);
+    color: #f87171;
+    border: 1px solid rgba(239,68,68,0.2);
     border-radius: 10px;
     padding: 16px 20px;
     margin: 20px;
     font-size: 14px;
   }
 
-  /* MODAL */
+  /* ── MODAL ── */
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(4px);
     z-index: 200;
     display: flex;
     align-items: flex-start;
@@ -413,18 +434,16 @@
     transition: opacity 0.2s;
   }
 
-  .modal-overlay.open {
-    opacity: 1;
-    pointer-events: all;
-  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
 
   .modal-panel {
-    background: var(--surface);
+    background: var(--slate2);
+    border-left: 1px solid var(--line);
     width: 480px;
     max-width: 95vw;
     height: 100vh;
     overflow-y: auto;
-    box-shadow: -8px 0 32px rgba(0,0,0,0.15);
+    box-shadow: -16px 0 60px rgba(0,0,0,0.6);
     transform: translateX(100%);
     transition: transform 0.25s ease;
     display: flex;
@@ -434,30 +453,32 @@
   .modal-overlay.open .modal-panel { transform: translateX(0); }
 
   .modal-header {
-    padding: 24px 24px 0;
+    padding: 26px 26px 0;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     position: sticky;
     top: 0;
-    background: var(--surface);
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
+    background: var(--slate2);
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+    z-index: 2;
   }
 
   .modal-title {
     font-size: 17px;
     font-weight: 700;
-    color: var(--navy);
+    color: var(--white);
     flex: 1;
     margin-right: 12px;
+    letter-spacing: -0.01em;
   }
 
   .modal-close {
-    background: var(--bg);
-    border: none;
-    color: var(--muted);
-    font-size: 18px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--line);
+    color: var(--dim);
+    font-size: 16px;
     cursor: pointer;
     width: 32px;
     height: 32px;
@@ -467,43 +488,43 @@
     justify-content: center;
     flex-shrink: 0;
     transition: all 0.15s;
+    font-family: var(--helv);
   }
 
-  .modal-close:hover { background: var(--accent); color: #fff; }
+  .modal-close:hover { background: var(--fire); color: var(--slate); border-color: var(--fire); }
 
-  .modal-body { padding: 20px 24px; flex: 1; }
+  .modal-body { padding: 22px 26px; flex: 1; }
 
-  .detail-group {
-    margin-bottom: 20px;
-  }
+  .detail-group { margin-bottom: 22px; }
 
   .detail-group-title {
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--accent);
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.2em;
+    color: var(--fire);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
   }
 
   .detail-row {
     display: flex;
     gap: 12px;
-    margin-bottom: 8px;
+    margin-bottom: 9px;
     font-size: 13px;
   }
 
   .detail-key {
-    color: var(--muted);
+    color: rgba(255,255,255,0.35);
     min-width: 130px;
     flex-shrink: 0;
     font-weight: 500;
+    letter-spacing: 0.01em;
   }
 
   .detail-val {
-    color: var(--text);
+    color: var(--white);
     word-break: break-word;
     flex: 1;
   }
@@ -511,40 +532,41 @@
   .detail-val.mono {
     font-family: monospace;
     font-size: 11px;
-    background: var(--bg);
-    padding: 2px 6px;
+    background: rgba(255,255,255,0.05);
+    padding: 2px 7px;
     border-radius: 4px;
+    color: var(--dim);
   }
 
-  /* PAGINATION */
+  /* ── PAGINATION ── */
   .pagination {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     padding: 16px;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--line);
   }
 
   .page-btn {
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 6px 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 7px 14px;
     font-size: 13px;
     cursor: pointer;
-    font-family: inherit;
-    color: var(--text);
+    font-family: var(--helv);
+    color: var(--dim);
     transition: all 0.15s;
+    letter-spacing: 0.02em;
   }
 
-  .page-btn:hover:not(:disabled) { border-color: var(--navy); background: var(--navy); color: #fff; }
-  .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  .page-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .page-btn:hover:not(:disabled) { border-color: var(--fire); color: var(--fire); background: var(--fire-dim); }
+  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .page-btn.active { background: var(--fire); border-color: var(--fire); color: var(--slate); font-weight: 700; }
 
-  .page-info { font-size: 13px; color: var(--muted); }
+  .page-info { font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 0.04em; }
 
-  /* VIEW toggle hidden for now - single view per tab */
   .tab-hidden { display: none; }
 </style>
 </head>
@@ -553,7 +575,8 @@
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-logo">
-    <div class="brand">Heritage Films</div>
+    <img src="https://cdn.prod.website-files.com/60bff930d512a35b704b11f0/672307b15bce0246f6e1ef95_unnamed.avif" alt="Heritage Films" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <div style="display:none;font-size:16px;font-weight:700;color:#fff;letter-spacing:-0.02em;">Heritage Films</div>
     <div class="sub">Licence Dashboard</div>
   </div>
   <nav class="sidebar-nav">
@@ -568,22 +591,23 @@
     </button>
   </nav>
   <div class="sidebar-footer">
-    Last loaded: <span id="last-loaded">—</span>
+    Refreshed <span id="last-loaded">—</span>
   </div>
 </aside>
 
 <!-- MAIN -->
 <main class="main">
   <div class="topbar">
-    <h1 id="page-title">Licence Submissions</h1>
-    <button class="refresh-btn" onclick="loadAll()">
-      ↻ Refresh
-    </button>
+    <div>
+      <div class="eyebrow">Heritage Films</div>
+      <h1 id="page-title">Licence Submissions</h1>
+    </div>
+    <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
   </div>
 
   <div class="content">
     <!-- STATS -->
-    <div class="stats-grid" id="stats-grid">
+    <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-label">Total Submissions</div>
         <div class="stat-value" id="stat-total">—</div>
@@ -604,7 +628,7 @@
         <div class="stat-value" id="stat-legacy">—</div>
         <div class="stat-sub">Limelight historical</div>
       </div>
-      <div class="stat-card accent">
+      <div class="stat-card fire">
         <div class="stat-label">Legacy Paid</div>
         <div class="stat-value" id="stat-legacy-paid">—</div>
         <div class="stat-sub">confirmed payments</div>
@@ -678,134 +702,77 @@
 </div>
 
 <script>
-// =====================
-// CONFIG
-// =====================
 const SUPABASE_URL = 'https://nwchcduhlhhppvyhxbpo.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_-CW4LY8e61BQX68E4494zA_K-8pRRQY';
 
 const PAGE_SIZE = 25;
+let allSubmissions = [], filteredSubmissions = [], subPage = 1;
+let allLegacy = [], filteredLegacy = [], legPage = 1;
 
-let allSubmissions = [];
-let filteredSubmissions = [];
-let subPage = 1;
-
-let allLegacy = [];
-let filteredLegacy = [];
-let legPage = 1;
-
-let sortCol = 'submitted_at';
-let sortDir = -1;
-
-// =====================
-// FETCH
-// =====================
 async function fetchTable(table, select = '*') {
-  const headers = {
-    'apikey': SUPABASE_KEY,
-    'Authorization': `Bearer ${SUPABASE_KEY}`,
-    'Range': '0-999',
-    'Prefer': 'count=exact'
-  };
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=${select}&limit=1000`, { headers });
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=${select}&limit=1000`, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Range': '0-999',
+    }
+  });
   if (!res.ok) throw new Error(`Failed to fetch ${table}: ${res.status}`);
-  return await res.json();
+  return res.json();
 }
 
 async function loadAll() {
   document.getElementById('last-loaded').textContent = '…';
-
-  // Reset spinners
   document.getElementById('sub-table-wrap').innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
   document.getElementById('leg-table-wrap').innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
-
   try {
     const [submissions, legacy] = await Promise.all([
       fetchTable('form_submissions', 'id,submitted_at,checkout_completed_at,name,email,organisation_name,organisation_type,country,form_name,source_site,license_type,film_cut,group_size,valid_window,screening_date,promo_applied,stripe_price_id,stripe_event_id,forwarded,forward_status,wonder_redemption_code'),
       fetchTable('limelight_legacy_registrations')
     ]);
-
     allSubmissions = submissions.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
     allLegacy = legacy.sort((a, b) => new Date(b.registered_at || 0) - new Date(a.registered_at || 0));
-
-    updateStats();
-    populateFilters();
-    filterSubmissions();
-    filterLegacy();
-
+    updateStats(); populateFilters(); filterSubmissions(); filterLegacy();
     document.getElementById('nav-sub-count').textContent = allSubmissions.length;
     document.getElementById('nav-leg-count').textContent = allLegacy.length;
     document.getElementById('last-loaded').textContent = new Date().toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
-
-  } catch (err) {
-    console.error(err);
-    const errHtml = `<div class="error-box">⚠️ ${err.message}</div>`;
-    document.getElementById('sub-table-wrap').innerHTML = errHtml;
-    document.getElementById('leg-table-wrap').innerHTML = errHtml;
+  } catch(err) {
+    const e = `<div class="error-box">⚠️ ${err.message}</div>`;
+    document.getElementById('sub-table-wrap').innerHTML = e;
+    document.getElementById('leg-table-wrap').innerHTML = e;
     document.getElementById('last-loaded').textContent = 'Error';
   }
 }
 
-// =====================
-// STATS
-// =====================
 function updateStats() {
   const paid = allSubmissions.filter(s => s.checkout_completed_at).length;
-  const pending = allSubmissions.filter(s => !s.checkout_completed_at).length;
   const legPaid = allLegacy.filter(l => l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'))).length;
-
   document.getElementById('stat-total').textContent = allSubmissions.length;
   document.getElementById('stat-paid').textContent = paid;
-  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-pending').textContent = allSubmissions.length - paid;
   document.getElementById('stat-legacy').textContent = allLegacy.length;
   document.getElementById('stat-legacy-paid').textContent = legPaid;
 }
 
-// =====================
-// FILTERS
-// =====================
 function populateFilters() {
-  // Film names from form_submissions
   const films = [...new Set(allSubmissions.map(s => s.form_name).filter(Boolean))].sort();
   const filmSel = document.getElementById('sub-film');
   filmSel.innerHTML = '<option value="">All Films</option>';
-  films.forEach(f => {
-    const opt = document.createElement('option');
-    opt.value = f;
-    opt.textContent = filmLabel(f);
-    filmSel.appendChild(opt);
-  });
+  films.forEach(f => { const o = document.createElement('option'); o.value = f; o.textContent = filmLabel(f); filmSel.appendChild(o); });
 
-  // Countries for submissions
-  const subCountries = [...new Set(allSubmissions.map(s => s.country).filter(Boolean))].sort();
-  const subCountrySel = document.getElementById('sub-country');
-  subCountrySel.innerHTML = '<option value="">All Countries</option>';
-  subCountries.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c; opt.textContent = c;
-    subCountrySel.appendChild(opt);
-  });
+  const subC = [...new Set(allSubmissions.map(s => s.country).filter(Boolean))].sort();
+  const subCS = document.getElementById('sub-country');
+  subCS.innerHTML = '<option value="">All Countries</option>';
+  subC.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; subCS.appendChild(o); });
 
-  // Countries for legacy
-  const legCountries = [...new Set(allLegacy.map(l => l.country).filter(Boolean))].sort();
-  const legCountrySel = document.getElementById('leg-country');
-  legCountrySel.innerHTML = '<option value="">All Countries</option>';
-  legCountries.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c; opt.textContent = c;
-    legCountrySel.appendChild(opt);
-  });
+  const legC = [...new Set(allLegacy.map(l => l.country).filter(Boolean))].sort();
+  const legCS = document.getElementById('leg-country');
+  legCS.innerHTML = '<option value="">All Countries</option>';
+  legC.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; legCS.appendChild(o); });
 }
 
-function filmLabel(formName) {
-  const map = {
-    'TFH-License-Form': 'The First Hymn',
-    'TH-License-Form': 'The Hopeful',
-    'LL-License-Form': 'Limelight',
-    'LL-Education-License': 'Limelight (Education)',
-    'TBOJ-Host-Form': 'The Book of Job'
-  };
-  return map[formName] || formName;
+function filmLabel(n) {
+  return { 'TFH-License-Form': 'The First Hymn', 'TH-License-Form': 'The Hopeful', 'LL-License-Form': 'Limelight', 'LL-Education-License': 'Limelight (Education)', 'TBOJ-Host-Form': 'The Book of Job' }[n] || n;
 }
 
 function filterSubmissions() {
@@ -813,7 +780,6 @@ function filterSubmissions() {
   const film = document.getElementById('sub-film').value;
   const status = document.getElementById('sub-status').value;
   const country = document.getElementById('sub-country').value;
-
   filteredSubmissions = allSubmissions.filter(s => {
     const text = [s.name, s.email, s.organisation_name].join(' ').toLowerCase();
     if (q && !text.includes(q)) return false;
@@ -823,338 +789,152 @@ function filterSubmissions() {
     if (status === 'pending' && s.checkout_completed_at) return false;
     return true;
   });
-
-  subPage = 1;
-  renderSubmissionsTable();
+  subPage = 1; renderSubmissionsTable();
 }
 
 function filterLegacy() {
   const q = document.getElementById('leg-search').value.toLowerCase();
   const status = document.getElementById('leg-status').value;
   const country = document.getElementById('leg-country').value;
-
   filteredLegacy = allLegacy.filter(l => {
     const text = [l.name, l.email, l.school_name].join(' ').toLowerCase();
     if (q && !text.includes(q)) return false;
     if (country && l.country !== country) return false;
-    if (status === 'paid') {
-      const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
-      if (!isPaid) return false;
-    }
-    if (status === 'unpaid') {
-      const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
-      if (isPaid) return false;
-    }
+    const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
+    if (status === 'paid' && !isPaid) return false;
+    if (status === 'unpaid' && isPaid) return false;
     return true;
   });
-
-  legPage = 1;
-  renderLegacyTable();
+  legPage = 1; renderLegacyTable();
 }
 
-// =====================
-// RENDER - SUBMISSIONS
-// =====================
 function renderSubmissionsTable() {
   const wrap = document.getElementById('sub-table-wrap');
   const total = filteredSubmissions.length;
   document.getElementById('sub-results-count').textContent = `${total} result${total !== 1 ? 's' : ''}`;
-
-  if (total === 0) {
-    wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No submissions match your filters</p></div>';
-    document.getElementById('sub-pagination').innerHTML = '';
-    return;
-  }
-
-  const start = (subPage - 1) * PAGE_SIZE;
-  const rows = filteredSubmissions.slice(start, start + PAGE_SIZE);
-
-  let html = `<table>
-    <thead><tr>
-      <th>Name / Org</th>
-      <th>Email</th>
-      <th>Film</th>
-      <th>Licence Type</th>
-      <th>Country</th>
-      <th>Status</th>
-      <th>Submitted</th>
-    </tr></thead>
-    <tbody>`;
-
+  if (!total) { wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No submissions match your filters</p></div>'; document.getElementById('sub-pagination').innerHTML = ''; return; }
+  const rows = filteredSubmissions.slice((subPage-1)*PAGE_SIZE, subPage*PAGE_SIZE);
+  let html = `<table><thead><tr><th>Name / Org</th><th>Email</th><th>Film</th><th>Licence Type</th><th>Country</th><th>Status</th><th>Submitted</th></tr></thead><tbody>`;
   rows.forEach(s => {
     const paid = !!s.checkout_completed_at;
-    const badge = paid
-      ? '<span class="badge badge-green">Paid</span>'
-      : '<span class="badge badge-orange">Pending</span>';
-    const date = s.submitted_at ? fmtDate(s.submitted_at) : '—';
-    const org = s.organisation_name || '—';
-    const name = s.name || '—';
-    const film = filmLabel(s.form_name || '');
-
+    const badge = paid ? '<span class="badge badge-green">Paid</span>' : '<span class="badge badge-orange">Pending</span>';
     html += `<tr onclick="openSubmissionModal('${s.id}')">
-      <td class="td-name">
-        <div>${esc(name)}</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px;">${esc(org)}</div>
-      </td>
-      <td class="td-email">${esc(s.email || '—')}</td>
-      <td>${esc(film)}</td>
-      <td style="max-width:160px;">${esc(s.license_type || '—')}</td>
-      <td>${esc(s.country || '—')}</td>
+      <td class="td-name"><div>${esc(s.name||'—')}</div><div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;font-weight:400;">${esc(s.organisation_name||'')}</div></td>
+      <td>${esc(s.email||'—')}</td>
+      <td>${esc(filmLabel(s.form_name||''))}</td>
+      <td style="max-width:160px;">${esc(s.license_type||'—')}</td>
+      <td>${esc(s.country||'—')}</td>
       <td>${badge}</td>
-      <td class="td-date">${date}</td>
+      <td class="td-date">${s.submitted_at ? fmtDate(s.submitted_at) : '—'}</td>
     </tr>`;
   });
-
   html += '</tbody></table>';
   wrap.innerHTML = html;
   renderPagination('sub', total, subPage, n => { subPage = n; renderSubmissionsTable(); });
 }
 
-// =====================
-// RENDER - LEGACY
-// =====================
 function renderLegacyTable() {
   const wrap = document.getElementById('leg-table-wrap');
   const total = filteredLegacy.length;
   document.getElementById('leg-results-count').textContent = `${total} result${total !== 1 ? 's' : ''}`;
-
-  if (total === 0) {
-    wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No registrations match your filters</p></div>';
-    document.getElementById('leg-pagination').innerHTML = '';
-    return;
-  }
-
-  const start = (legPage - 1) * PAGE_SIZE;
-  const rows = filteredLegacy.slice(start, start + PAGE_SIZE);
-
-  let html = `<table>
-    <thead><tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>School / Org</th>
-      <th>Type</th>
-      <th>Country</th>
-      <th>Entries</th>
-      <th>Status</th>
-      <th>Registered</th>
-    </tr></thead>
-    <tbody>`;
-
+  if (!total) { wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No registrations match your filters</p></div>'; document.getElementById('leg-pagination').innerHTML = ''; return; }
+  const rows = filteredLegacy.slice((legPage-1)*PAGE_SIZE, legPage*PAGE_SIZE);
+  let html = `<table><thead><tr><th>Name</th><th>Email</th><th>School / Org</th><th>Type</th><th>Country</th><th>Entries</th><th>Status</th><th>Registered</th></tr></thead><tbody>`;
   rows.forEach(l => {
     const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
-    let badge;
-    if (isPaid) badge = '<span class="badge badge-green">Paid</span>';
-    else if (l.status && l.status.toLowerCase().includes('not paid')) badge = '<span class="badge badge-red">Not Paid</span>';
-    else badge = `<span class="badge badge-grey">${esc(l.status || '—')}</span>`;
-
-    const date = l.registered_at ? fmtDate(l.registered_at) : '—';
-
+    const badge = isPaid ? '<span class="badge badge-green">Paid</span>' : (l.status && l.status.toLowerCase().includes('not paid') ? '<span class="badge badge-red">Not Paid</span>' : `<span class="badge badge-grey">${esc(l.status||'—')}</span>`);
     html += `<tr onclick="openLegacyModal('${l.id}')">
-      <td class="td-name">${esc(l.name || '—')}</td>
-      <td class="td-email">${esc(l.email || '—')}</td>
-      <td>${esc(l.school_name || '—')}</td>
-      <td>${esc(l.school_type || '—')}</td>
-      <td>${esc(l.country || '—')}</td>
-      <td>${l.entries_used ?? 0} / ${l.entries_bought ?? 0}</td>
+      <td class="td-name">${esc(l.name||'—')}</td>
+      <td>${esc(l.email||'—')}</td>
+      <td>${esc(l.school_name||'—')}</td>
+      <td>${esc(l.school_type||'—')}</td>
+      <td>${esc(l.country||'—')}</td>
+      <td>${l.entries_used??0} / ${l.entries_bought??0}</td>
       <td>${badge}</td>
-      <td class="td-date">${date}</td>
+      <td class="td-date">${l.registered_at ? fmtDate(l.registered_at) : '—'}</td>
     </tr>`;
   });
-
   html += '</tbody></table>';
   wrap.innerHTML = html;
   renderPagination('leg', total, legPage, n => { legPage = n; renderLegacyTable(); });
 }
 
-// =====================
-// PAGINATION
-// =====================
 function renderPagination(id, total, current, onPage) {
   const pages = Math.ceil(total / PAGE_SIZE);
   const el = document.getElementById(`${id}-pagination`);
   if (pages <= 1) { el.innerHTML = ''; return; }
-
-  let html = `<button class="page-btn" onclick="(${onPage.toString()})(${current - 1})" ${current === 1 ? 'disabled' : ''}>‹ Prev</button>`;
-  html += `<span class="page-info">Page ${current} of ${pages}</span>`;
-  html += `<button class="page-btn" onclick="(${onPage.toString()})(${current + 1})" ${current === pages ? 'disabled' : ''}>Next ›</button>`;
-  el.innerHTML = html;
+  el.innerHTML = `<button class="page-btn" onclick="(${onPage.toString()})(${current-1})" ${current===1?'disabled':''}>‹ Prev</button><span class="page-info">Page ${current} of ${pages}</span><button class="page-btn" onclick="(${onPage.toString()})(${current+1})" ${current===pages?'disabled':''}>Next ›</button>`;
 }
 
-// =====================
-// MODALS
-// =====================
 function openSubmissionModal(id) {
   const s = allSubmissions.find(x => x.id === id);
   if (!s) return;
-
   const paid = !!s.checkout_completed_at;
-  const badge = paid
-    ? '<span class="badge badge-green">Paid</span>'
-    : '<span class="badge badge-orange">Pending Payment</span>';
-
+  const badge = paid ? '<span class="badge badge-green">Paid</span>' : '<span class="badge badge-orange">Pending Payment</span>';
   document.getElementById('modal-title').textContent = s.name || 'Submission Details';
-
-  const payloadDetails = s.payload ? Object.entries(s.payload).filter(([k, v]) => v !== null && v !== '' && v !== false).map(([k, v]) => `
-    <div class="detail-row">
-      <div class="detail-key">${esc(k)}</div>
-      <div class="detail-val">${esc(String(v))}</div>
-    </div>`).join('') : '';
-
   document.getElementById('modal-body').innerHTML = `
-    <div style="margin-bottom:16px;">${badge}</div>
-
-    <div class="detail-group">
-      <div class="detail-group-title">Contact</div>
-      ${dr('Name', s.name)}
-      ${dr('Email', s.email)}
-      ${dr('Organisation', s.organisation_name)}
-      ${dr('Org Type', s.organisation_type)}
-      ${dr('Country', s.country)}
-    </div>
-
-    <div class="detail-group">
-      <div class="detail-group-title">Licence</div>
-      ${dr('Film', filmLabel(s.form_name))}
-      ${dr('Source Site', s.source_site)}
-      ${dr('Licence Type', s.license_type)}
-      ${dr('Film Cut', s.film_cut)}
-      ${dr('Group Size', s.group_size)}
-      ${dr('Valid Window', s.valid_window)}
-      ${dr('Screening Date', s.screening_date)}
-      ${dr('Promo Applied', s.promo_applied ? 'Yes' : 'No')}
-      ${dr('Wonder Code', s.wonder_redemption_code)}
-    </div>
-
-    <div class="detail-group">
-      <div class="detail-group-title">Payment</div>
-      ${dr('Submitted', s.submitted_at ? fmtDateFull(s.submitted_at) : '—')}
-      ${dr('Checkout Completed', s.checkout_completed_at ? fmtDateFull(s.checkout_completed_at) : 'Not completed')}
-      ${dr('Stripe Event', s.stripe_event_id, true)}
-      ${dr('Stripe Price ID', s.stripe_price_id, true)}
-    </div>
-
-    <div class="detail-group">
-      <div class="detail-group-title">System</div>
-      ${dr('ID', s.id, true)}
-      ${dr('Forwarded', s.forwarded ? 'Yes' : 'No')}
-      ${dr('Forward Status', s.forward_status)}
-    </div>
-  `;
-
+    <div style="margin-bottom:18px;">${badge}</div>
+    <div class="detail-group"><div class="detail-group-title">Contact</div>
+      ${dr('Name',s.name)}${dr('Email',s.email)}${dr('Organisation',s.organisation_name)}${dr('Org Type',s.organisation_type)}${dr('Country',s.country)}</div>
+    <div class="detail-group"><div class="detail-group-title">Licence</div>
+      ${dr('Film',filmLabel(s.form_name))}${dr('Source Site',s.source_site)}${dr('Licence Type',s.license_type)}${dr('Film Cut',s.film_cut)}${dr('Group Size',s.group_size)}${dr('Valid Window',s.valid_window)}${dr('Screening Date',s.screening_date)}${dr('Promo Applied',s.promo_applied?'Yes':'No')}${dr('Wonder Code',s.wonder_redemption_code)}</div>
+    <div class="detail-group"><div class="detail-group-title">Payment</div>
+      ${dr('Submitted',s.submitted_at?fmtDateFull(s.submitted_at):'—')}${dr('Checkout Completed',s.checkout_completed_at?fmtDateFull(s.checkout_completed_at):'Not completed')}${dr('Stripe Event',s.stripe_event_id,true)}${dr('Stripe Price ID',s.stripe_price_id,true)}</div>
+    <div class="detail-group"><div class="detail-group-title">System</div>
+      ${dr('ID',s.id,true)}${dr('Forwarded',s.forwarded?'Yes':'No')}${dr('Forward Status',s.forward_status)}</div>`;
   openModal();
 }
 
 function openLegacyModal(id) {
   const l = allLegacy.find(x => x.id === id);
   if (!l) return;
-
   const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
-  let badge;
-  if (isPaid) badge = '<span class="badge badge-green">Paid</span>';
-  else if (l.status && l.status.toLowerCase().includes('not paid')) badge = '<span class="badge badge-red">Not Paid</span>';
-  else badge = `<span class="badge badge-grey">${esc(l.status || '—')}</span>`;
-
+  const badge = isPaid ? '<span class="badge badge-green">Paid</span>' : (l.status && l.status.toLowerCase().includes('not paid') ? '<span class="badge badge-red">Not Paid</span>' : `<span class="badge badge-grey">${esc(l.status||'—')}</span>`);
   document.getElementById('modal-title').textContent = l.name || 'Legacy Registration';
-
   document.getElementById('modal-body').innerHTML = `
-    <div style="margin-bottom:16px;">${badge}</div>
-
-    <div class="detail-group">
-      <div class="detail-group-title">Contact</div>
-      ${dr('Name', l.name)}
-      ${dr('Email', l.email)}
-      ${dr('School / Org', l.school_name)}
-      ${dr('School Type', l.school_type)}
-      ${dr('Country', l.country)}
-      ${dr('Address', l.address)}
-    </div>
-
-    <div class="detail-group">
-      <div class="detail-group-title">Licence Usage</div>
-      ${dr('Entries Bought', l.entries_bought)}
-      ${dr('Entries Used', l.entries_used)}
-      ${dr('Status', l.status)}
-      ${dr('Wonder Code', l.wonder_redemption_code)}
-      ${dr('Promo Code Used', l.promo_code_used)}
-    </div>
-
-    <div class="detail-group">
-      <div class="detail-group-title">Payment</div>
-      ${dr('Registered At', l.registered_at ? fmtDateFull(l.registered_at) : '—')}
-      ${dr('Paid At', l.paid_at ? fmtDateFull(l.paid_at) : 'Not paid')}
-      ${dr('Stripe Session', l.stripe_session_id, true)}
-      ${dr('Stripe Event', l.stripe_event_id, true)}
-    </div>
-
-    <div class="detail-group">
-      <div class="detail-group-title">System</div>
-      ${dr('ID', l.id, true)}
-      ${dr('Event Key', l.event_key, true)}
-      ${dr('School Key', l.school_key, true)}
-    </div>
-  `;
-
+    <div style="margin-bottom:18px;">${badge}</div>
+    <div class="detail-group"><div class="detail-group-title">Contact</div>
+      ${dr('Name',l.name)}${dr('Email',l.email)}${dr('School / Org',l.school_name)}${dr('School Type',l.school_type)}${dr('Country',l.country)}${dr('Address',l.address)}</div>
+    <div class="detail-group"><div class="detail-group-title">Licence Usage</div>
+      ${dr('Entries Bought',l.entries_bought)}${dr('Entries Used',l.entries_used)}${dr('Status',l.status)}${dr('Wonder Code',l.wonder_redemption_code)}${dr('Promo Code Used',l.promo_code_used)}</div>
+    <div class="detail-group"><div class="detail-group-title">Payment</div>
+      ${dr('Registered At',l.registered_at?fmtDateFull(l.registered_at):'—')}${dr('Paid At',l.paid_at?fmtDateFull(l.paid_at):'Not paid')}${dr('Stripe Session',l.stripe_session_id,true)}${dr('Stripe Event',l.stripe_event_id,true)}</div>
+    <div class="detail-group"><div class="detail-group-title">System</div>
+      ${dr('ID',l.id,true)}${dr('Event Key',l.event_key,true)}${dr('School Key',l.school_key,true)}</div>`;
   openModal();
 }
 
-function dr(label, value, mono = false) {
-  const display = value === null || value === undefined || value === '' ? '<span style="color:var(--muted)">—</span>' : esc(String(value));
-  return `<div class="detail-row">
-    <div class="detail-key">${label}</div>
-    <div class="detail-val${mono ? ' mono' : ''}">${display}</div>
-  </div>`;
+function dr(label, value, mono=false) {
+  const display = (value===null||value===undefined||value==='') ? '<span style="color:rgba(255,255,255,0.18)">—</span>' : esc(String(value));
+  return `<div class="detail-row"><div class="detail-key">${label}</div><div class="detail-val${mono?' mono':''}">${display}</div></div>`;
 }
 
-function openModal() {
-  document.getElementById('modal-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
+function openModal()  { document.getElementById('modal-overlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
+function closeModalOnBg(e) { if (e.target===document.getElementById('modal-overlay')) closeModal(); }
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
 
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function closeModalOnBg(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeModal();
-}
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-// =====================
-// TABS
-// =====================
 function switchTab(tab) {
-  document.getElementById('tab-submissions').classList.toggle('tab-hidden', tab !== 'submissions');
-  document.getElementById('tab-legacy').classList.toggle('tab-hidden', tab !== 'legacy');
-  document.getElementById('nav-submissions').classList.toggle('active', tab === 'submissions');
-  document.getElementById('nav-legacy').classList.toggle('active', tab === 'legacy');
-  document.getElementById('page-title').textContent = tab === 'submissions' ? 'Licence Submissions' : 'Legacy Registrations (Limelight)';
+  document.getElementById('tab-submissions').classList.toggle('tab-hidden', tab!=='submissions');
+  document.getElementById('tab-legacy').classList.toggle('tab-hidden', tab!=='legacy');
+  document.getElementById('nav-submissions').classList.toggle('active', tab==='submissions');
+  document.getElementById('nav-legacy').classList.toggle('active', tab==='legacy');
+  document.getElementById('page-title').textContent = tab==='submissions' ? 'Licence Submissions' : 'Legacy Registrations (Limelight)';
 }
 
-// =====================
-// UTILS
-// =====================
 function esc(str) {
-  if (!str && str !== 0) return '';
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  if (!str && str!==0) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
 function fmtDate(iso) {
   if (!iso) return '—';
-  const d = new Date(iso);
-  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  return new Date(iso).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
 }
-
 function fmtDateFull(iso) {
   if (!iso) return '—';
-  const d = new Date(iso);
-  return d.toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return new Date(iso).toLocaleString('en-AU', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
 }
 
-// =====================
-// INIT
-// =====================
 loadAll();
 </script>
 </body>
