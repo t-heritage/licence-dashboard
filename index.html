@@ -7,6 +7,7 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* ── THEME TOKENS ── */
   :root {
     --slate:    #0d1117;
     --slate2:   #151b23;
@@ -14,14 +15,25 @@
     --fire:     #FF921E;
     --fire-dim: rgba(255,146,30,0.12);
     --white:    #ffffff;
-    --nimbus:   #F2F2F2;
     --dim:      rgba(255,255,255,0.55);
     --line:     rgba(255,255,255,0.06);
+    --text-sub: rgba(255,255,255,0.32);
     --green:    #10b981;
     --orange:   #f59e0b;
     --red:      #ef4444;
     --sidebar-w: 224px;
     --helv: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  body.light {
+    --slate:    #f5f5f0;
+    --slate2:   #ffffff;
+    --slate3:   #ebebeb;
+    --white:    #111111;
+    --dim:      rgba(0,0,0,0.6);
+    --line:     rgba(0,0,0,0.08);
+    --text-sub: rgba(0,0,0,0.38);
+    --fire-dim: rgba(255,146,30,0.1);
   }
 
   body {
@@ -31,6 +43,7 @@
     min-height: 100vh;
     display: flex;
     -webkit-font-smoothing: antialiased;
+    transition: background 0.2s, color 0.2s;
   }
 
   /* ── SIDEBAR ── */
@@ -50,11 +63,7 @@
     border-bottom: 1px solid var(--line);
   }
 
-  .sidebar-logo img {
-    height: 30px;
-    width: auto;
-    object-fit: contain;
-  }
+  .sidebar-logo img { height: 30px; width: auto; object-fit: contain; }
 
   .sidebar-logo .sub {
     color: var(--fire);
@@ -65,13 +74,10 @@
     margin-top: 8px;
   }
 
-  .sidebar-nav {
-    padding: 18px 12px;
-    flex: 1;
-  }
+  .sidebar-nav { padding: 18px 12px; flex: 1; }
 
   .nav-label {
-    color: rgba(255,255,255,0.28);
+    color: var(--text-sub);
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
@@ -101,15 +107,15 @@
     letter-spacing: 0.01em;
   }
 
-  .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
-  .nav-item.active { background: var(--fire); color: var(--slate); }
+  .nav-item:hover { background: var(--fire-dim); color: var(--white); }
+  .nav-item.active { background: var(--fire); color: #0d1117; }
 
   .nav-item .icon { font-size: 15px; width: 20px; text-align: center; }
 
   .badge-count {
     margin-left: auto;
-    background: rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.7);
+    background: var(--line);
+    color: var(--dim);
     font-size: 11px;
     font-weight: 700;
     padding: 2px 8px;
@@ -117,15 +123,12 @@
     letter-spacing: 0.02em;
   }
 
-  .nav-item.active .badge-count {
-    background: rgba(13,17,23,0.25);
-    color: var(--slate);
-  }
+  .nav-item.active .badge-count { background: rgba(13,17,23,0.2); color: #0d1117; }
 
   .sidebar-footer {
     padding: 18px 22px;
     border-top: 1px solid var(--line);
-    color: rgba(255,255,255,0.28);
+    color: var(--text-sub);
     font-size: 11px;
     letter-spacing: 0.02em;
   }
@@ -141,8 +144,7 @@
   }
 
   .topbar {
-    background: rgba(13,17,23,0.92);
-    backdrop-filter: blur(12px);
+    background: var(--slate2);
     border-bottom: 1px solid var(--line);
     padding: 0 32px;
     display: flex;
@@ -154,25 +156,35 @@
     z-index: 50;
   }
 
-  .topbar h1 {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--white);
-    letter-spacing: 0.01em;
+  .topbar h1 { font-size: 16px; font-weight: 700; color: var(--white); letter-spacing: 0.01em; }
+  .topbar .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fire); margin-bottom: 3px; }
+
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+  /* ── THEME TOGGLE ── */
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--slate3);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: var(--helv);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--dim);
+    letter-spacing: 0.04em;
+    transition: all 0.15s;
   }
 
-  .topbar .eyebrow {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--fire);
-    margin-bottom: 3px;
-  }
+  .theme-toggle:hover { border-color: var(--fire); color: var(--fire); }
+  .theme-toggle .toggle-icon { font-size: 14px; }
 
   .refresh-btn {
     background: var(--fire);
-    color: var(--slate);
+    color: #0d1117;
     border: none;
     padding: 9px 20px;
     border-radius: 999px;
@@ -189,10 +201,7 @@
 
   .refresh-btn:hover { opacity: 0.85; }
 
-  .content {
-    padding: 28px 32px;
-    flex: 1;
-  }
+  .content { padding: 28px 32px; flex: 1; }
 
   /* ── STAT CARDS ── */
   .stats-grid {
@@ -210,14 +219,14 @@
     transition: border-color 0.15s;
   }
 
-  .stat-card:hover { border-color: rgba(255,146,30,0.25); }
+  .stat-card:hover { border-color: rgba(255,146,30,0.3); }
 
   .stat-label {
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.18em;
-    color: rgba(255,255,255,0.38);
+    color: var(--text-sub);
     margin-bottom: 12px;
   }
 
@@ -229,15 +238,10 @@
     letter-spacing: -0.02em;
   }
 
-  .stat-sub {
-    font-size: 12px;
-    color: var(--dim);
-    margin-top: 6px;
-  }
-
-  .stat-card.fire .stat-value  { color: var(--fire); }
-  .stat-card.green .stat-value { color: var(--green); }
-  .stat-card.orange .stat-value{ color: var(--orange); }
+  .stat-sub { font-size: 12px; color: var(--dim); margin-top: 6px; }
+  .stat-card.fire .stat-value   { color: var(--fire); }
+  .stat-card.green .stat-value  { color: var(--green); }
+  .stat-card.orange .stat-value { color: var(--orange); }
 
   /* ── PANEL ── */
   .panel {
@@ -249,10 +253,10 @@
 
   /* ── FILTERS ── */
   .filters {
-    padding: 16px 20px;
+    padding: 14px 18px;
     border-bottom: 1px solid var(--line);
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
     align-items: center;
   }
@@ -260,26 +264,26 @@
   .search-wrap {
     position: relative;
     flex: 1;
-    min-width: 200px;
-    max-width: 340px;
+    min-width: 180px;
+    max-width: 300px;
   }
 
   .search-wrap .icon {
     position: absolute;
-    left: 12px;
+    left: 11px;
     top: 50%;
     transform: translateY(-50%);
-    color: rgba(255,255,255,0.3);
+    color: var(--text-sub);
     font-size: 13px;
     pointer-events: none;
   }
 
   .search-input {
     width: 100%;
-    padding: 9px 12px 9px 34px;
+    padding: 8px 10px 8px 32px;
     border: 1px solid var(--line);
     border-radius: 8px;
-    font-size: 13.5px;
+    font-size: 13px;
     font-family: var(--helv);
     color: var(--white);
     background: var(--slate3);
@@ -287,11 +291,11 @@
     transition: border-color 0.15s;
   }
 
-  .search-input::placeholder { color: rgba(255,255,255,0.28); }
+  .search-input::placeholder { color: var(--text-sub); }
   .search-input:focus { border-color: rgba(255,146,30,0.5); }
 
   .filter-select {
-    padding: 9px 12px;
+    padding: 8px 10px;
     border: 1px solid var(--line);
     border-radius: 8px;
     font-size: 13px;
@@ -300,16 +304,40 @@
     background: var(--slate3);
     outline: none;
     cursor: pointer;
-    min-width: 130px;
   }
 
   .filter-select:focus { border-color: rgba(255,146,30,0.5); }
-  .filter-select option { background: var(--slate2); }
+
+  /* Custom date range row */
+  .date-custom {
+    display: none;
+    gap: 6px;
+    align-items: center;
+    width: 100%;
+    padding-top: 6px;
+  }
+
+  .date-custom.show { display: flex; }
+
+  .date-input {
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: var(--helv);
+    color: var(--white);
+    background: var(--slate3);
+    outline: none;
+    cursor: pointer;
+  }
+
+  .date-input:focus { border-color: rgba(255,146,30,0.5); }
+  .date-label { font-size: 11px; color: var(--text-sub); white-space: nowrap; }
 
   .results-count {
     margin-left: auto;
     font-size: 12px;
-    color: rgba(255,255,255,0.3);
+    color: var(--text-sub);
     white-space: nowrap;
     letter-spacing: 0.04em;
   }
@@ -317,29 +345,21 @@
   /* ── TABLE ── */
   .table-wrap { overflow-x: auto; }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
 
   thead th {
-    background: rgba(255,255,255,0.025);
-    padding: 11px 16px;
+    background: var(--slate3);
+    padding: 10px 14px;
     text-align: left;
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.16em;
-    color: rgba(255,255,255,0.32);
+    color: var(--text-sub);
     border-bottom: 1px solid var(--line);
     white-space: nowrap;
-    cursor: pointer;
     user-select: none;
   }
-
-  thead th:hover { color: var(--fire); }
-  thead th.sorted { color: var(--fire); }
 
   tbody tr {
     border-bottom: 1px solid var(--line);
@@ -348,12 +368,12 @@
   }
 
   tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: rgba(255,255,255,0.03); }
+  tbody tr:hover { background: var(--fire-dim); }
 
   tbody td {
-    padding: 12px 16px;
+    padding: 11px 14px;
     vertical-align: middle;
-    max-width: 200px;
+    max-width: 180px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -362,6 +382,17 @@
 
   .td-name { font-weight: 600; color: var(--white) !important; }
   .td-date { white-space: nowrap; }
+
+  .cio-link {
+    color: var(--fire);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .cio-link:hover { text-decoration: underline; }
 
   /* ── BADGES ── */
   .badge {
@@ -378,18 +409,13 @@
   }
 
   .badge::before { content: '●'; font-size: 7px; }
-  .badge-green  { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
-  .badge-orange { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
-  .badge-red    { background: rgba(239,68,68,0.15);  color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
-  .badge-grey   { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.08); }
+  .badge-green  { background: rgba(16,185,129,0.15);  color: #34d399; border: 1px solid rgba(16,185,129,0.25); }
+  .badge-orange { background: rgba(245,158,11,0.15);  color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+  .badge-red    { background: rgba(239,68,68,0.15);   color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+  .badge-grey   { background: var(--fire-dim); color: var(--dim); border: 1px solid var(--line); }
 
   /* ── EMPTY ── */
-  .empty-state {
-    text-align: center;
-    padding: 70px 20px;
-    color: rgba(255,255,255,0.25);
-  }
-
+  .empty-state { text-align: center; padding: 70px 20px; color: var(--text-sub); }
   .empty-state .icon { font-size: 36px; margin-bottom: 14px; }
   .empty-state p { font-size: 14px; }
 
@@ -398,9 +424,8 @@
 
   .spinner {
     display: inline-block;
-    width: 34px;
-    height: 34px;
-    border: 3px solid rgba(255,255,255,0.08);
+    width: 34px; height: 34px;
+    border: 3px solid var(--line);
     border-top-color: var(--fire);
     border-radius: 50%;
     animation: spin 0.75s linear infinite;
@@ -443,7 +468,7 @@
     max-width: 95vw;
     height: 100vh;
     overflow-y: auto;
-    box-shadow: -16px 0 60px rgba(0,0,0,0.6);
+    box-shadow: -16px 0 60px rgba(0,0,0,0.5);
     transform: translateX(100%);
     transition: transform 0.25s ease;
     display: flex;
@@ -453,35 +478,26 @@
   .modal-overlay.open .modal-panel { transform: translateX(0); }
 
   .modal-header {
-    padding: 26px 26px 0;
+    padding: 26px 26px 18px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     position: sticky;
     top: 0;
     background: var(--slate2);
-    padding-bottom: 18px;
     border-bottom: 1px solid var(--line);
     z-index: 2;
   }
 
-  .modal-title {
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--white);
-    flex: 1;
-    margin-right: 12px;
-    letter-spacing: -0.01em;
-  }
+  .modal-title { font-size: 17px; font-weight: 700; color: var(--white); flex: 1; margin-right: 12px; letter-spacing: -0.01em; }
 
   .modal-close {
-    background: rgba(255,255,255,0.06);
+    background: var(--slate3);
     border: 1px solid var(--line);
     color: var(--dim);
     font-size: 16px;
     cursor: pointer;
-    width: 32px;
-    height: 32px;
+    width: 32px; height: 32px;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -491,10 +507,8 @@
     font-family: var(--helv);
   }
 
-  .modal-close:hover { background: var(--fire); color: var(--slate); border-color: var(--fire); }
-
+  .modal-close:hover { background: var(--fire); color: #0d1117; border-color: var(--fire); }
   .modal-body { padding: 22px 26px; flex: 1; }
-
   .detail-group { margin-bottom: 22px; }
 
   .detail-group-title {
@@ -508,35 +522,10 @@
     border-bottom: 1px solid var(--line);
   }
 
-  .detail-row {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 9px;
-    font-size: 13px;
-  }
-
-  .detail-key {
-    color: rgba(255,255,255,0.35);
-    min-width: 130px;
-    flex-shrink: 0;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-  }
-
-  .detail-val {
-    color: var(--white);
-    word-break: break-word;
-    flex: 1;
-  }
-
-  .detail-val.mono {
-    font-family: monospace;
-    font-size: 11px;
-    background: rgba(255,255,255,0.05);
-    padding: 2px 7px;
-    border-radius: 4px;
-    color: var(--dim);
-  }
+  .detail-row { display: flex; gap: 12px; margin-bottom: 9px; font-size: 13px; }
+  .detail-key { color: var(--text-sub); min-width: 130px; flex-shrink: 0; font-weight: 500; }
+  .detail-val { color: var(--white); word-break: break-word; flex: 1; }
+  .detail-val.mono { font-family: monospace; font-size: 11px; background: var(--slate3); padding: 2px 7px; border-radius: 4px; color: var(--dim); }
 
   /* ── PAGINATION ── */
   .pagination {
@@ -544,12 +533,12 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 16px;
+    padding: 14px;
     border-top: 1px solid var(--line);
   }
 
   .page-btn {
-    background: rgba(255,255,255,0.05);
+    background: var(--slate3);
     border: 1px solid var(--line);
     border-radius: 8px;
     padding: 7px 14px;
@@ -558,25 +547,23 @@
     font-family: var(--helv);
     color: var(--dim);
     transition: all 0.15s;
-    letter-spacing: 0.02em;
   }
 
   .page-btn:hover:not(:disabled) { border-color: var(--fire); color: var(--fire); background: var(--fire-dim); }
   .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  .page-btn.active { background: var(--fire); border-color: var(--fire); color: var(--slate); font-weight: 700; }
-
-  .page-info { font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 0.04em; }
+  .page-btn.active { background: var(--fire); border-color: var(--fire); color: #0d1117; font-weight: 700; }
+  .page-info { font-size: 12px; color: var(--text-sub); }
 
   .tab-hidden { display: none; }
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-logo">
-    <img src="https://cdn.prod.website-files.com/60bff930d512a35b704b11f0/672307b15bce0246f6e1ef95_unnamed.avif" alt="Heritage Films" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-    <div style="display:none;font-size:16px;font-weight:700;color:#fff;letter-spacing:-0.02em;">Heritage Films</div>
+    <img src="https://cdn.prod.website-files.com/60bff930d512a35b704b11f0/672307b15bce0246f6e1ef95_unnamed.avif" alt="Heritage Films"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <div style="display:none;font-size:15px;font-weight:700;letter-spacing:-0.02em;">Heritage Films</div>
     <div class="sub">Licence Dashboard</div>
   </div>
   <nav class="sidebar-nav">
@@ -590,23 +577,25 @@
       <span class="badge-count" id="nav-leg-count">—</span>
     </button>
   </nav>
-  <div class="sidebar-footer">
-    Refreshed <span id="last-loaded">—</span>
-  </div>
+  <div class="sidebar-footer">Refreshed <span id="last-loaded">—</span></div>
 </aside>
 
-<!-- MAIN -->
 <main class="main">
   <div class="topbar">
     <div>
       <div class="eyebrow">Heritage Films</div>
       <h1 id="page-title">Licence Submissions</h1>
     </div>
-    <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+    <div class="topbar-actions">
+      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
+        <span class="toggle-icon" id="theme-icon">☀️</span>
+        <span id="theme-label">Light</span>
+      </button>
+      <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+    </div>
   </div>
 
   <div class="content">
-    <!-- STATS -->
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-label">Total Submissions</div>
@@ -654,6 +643,19 @@
           <select class="filter-select" id="sub-country" onchange="filterSubmissions()">
             <option value="">All Countries</option>
           </select>
+          <select class="filter-select" id="sub-date" onchange="onSubDateChange()">
+            <option value="">All Time</option>
+            <option value="today">Today</option>
+            <option value="7">Last 7 Days</option>
+            <option value="30">Last 30 Days</option>
+            <option value="custom">Custom Range…</option>
+          </select>
+          <div class="date-custom" id="sub-date-custom">
+            <span class="date-label">From</span>
+            <input type="date" class="date-input" id="sub-date-from" onchange="filterSubmissions()">
+            <span class="date-label">To</span>
+            <input type="date" class="date-input" id="sub-date-to" onchange="filterSubmissions()">
+          </div>
           <div class="results-count" id="sub-results-count"></div>
         </div>
         <div class="table-wrap" id="sub-table-wrap">
@@ -679,6 +681,19 @@
           <select class="filter-select" id="leg-country" onchange="filterLegacy()">
             <option value="">All Countries</option>
           </select>
+          <select class="filter-select" id="leg-date" onchange="onLegDateChange()">
+            <option value="">All Time</option>
+            <option value="today">Today</option>
+            <option value="7">Last 7 Days</option>
+            <option value="30">Last 30 Days</option>
+            <option value="custom">Custom Range…</option>
+          </select>
+          <div class="date-custom" id="leg-date-custom">
+            <span class="date-label">From</span>
+            <input type="date" class="date-input" id="leg-date-from" onchange="filterLegacy()">
+            <span class="date-label">To</span>
+            <input type="date" class="date-input" id="leg-date-to" onchange="filterLegacy()">
+          </div>
           <div class="results-count" id="leg-results-count"></div>
         </div>
         <div class="table-wrap" id="leg-table-wrap">
@@ -704,18 +719,70 @@
 <script>
 const SUPABASE_URL = 'https://nwchcduhlhhppvyhxbpo.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_-CW4LY8e61BQX68E4494zA_K-8pRRQY';
+const CIO_WS      = '98515';
 
 const PAGE_SIZE = 25;
 let allSubmissions = [], filteredSubmissions = [], subPage = 1;
 let allLegacy = [], filteredLegacy = [], legPage = 1;
+let isDark = true;
 
+// ── THEME ──
+function toggleTheme() {
+  isDark = !isDark;
+  document.body.classList.toggle('light', !isDark);
+  document.getElementById('theme-icon').textContent  = isDark ? '☀️' : '🌙';
+  document.getElementById('theme-label').textContent = isDark ? 'Light' : 'Dark';
+}
+
+// ── DATE FILTER HELPERS ──
+function dateRangeBounds(val, fromId, toId) {
+  const now = new Date();
+  const startOfDay = d => { const x = new Date(d); x.setHours(0,0,0,0); return x; };
+  if (val === 'today')  return { from: startOfDay(now), to: null };
+  if (val === '7')      { const d = new Date(now); d.setDate(d.getDate()-6); return { from: startOfDay(d), to: null }; }
+  if (val === '30')     { const d = new Date(now); d.setDate(d.getDate()-29); return { from: startOfDay(d), to: null }; }
+  if (val === 'custom') {
+    const f = document.getElementById(fromId).value;
+    const t = document.getElementById(toId).value;
+    return {
+      from: f ? new Date(f + 'T00:00:00') : null,
+      to:   t ? new Date(t + 'T23:59:59') : null
+    };
+  }
+  return { from: null, to: null };
+}
+
+function inDateRange(isoStr, bounds) {
+  if (!bounds.from && !bounds.to) return true;
+  const d = new Date(isoStr);
+  if (bounds.from && d < bounds.from) return false;
+  if (bounds.to   && d > bounds.to)   return false;
+  return true;
+}
+
+function onSubDateChange() {
+  const val = document.getElementById('sub-date').value;
+  document.getElementById('sub-date-custom').classList.toggle('show', val === 'custom');
+  filterSubmissions();
+}
+
+function onLegDateChange() {
+  const val = document.getElementById('leg-date').value;
+  document.getElementById('leg-date-custom').classList.toggle('show', val === 'custom');
+  filterLegacy();
+}
+
+// ── CIO LINK ──
+function cioLink(email) {
+  if (!email) return '<span style="color:var(--text-sub)">—</span>';
+  const href = `https://fly.customer.io/workspaces/${CIO_WS}/journeys/people/${encodeURIComponent(email)}/sent`;
+  return `<a class="cio-link" href="${href}" target="_blank" rel="noopener" onclick="event.stopPropagation()">View →</a>`;
+}
+
+// ── FETCH ──
 async function fetchTable(table, select = '*') {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=${select}&limit=1000`, {
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Range': '0-999',
-    }
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Range': '0-999' }
   });
   if (!res.ok) throw new Error(`Failed to fetch ${table}: ${res.status}`);
   return res.json();
@@ -730,12 +797,12 @@ async function loadAll() {
       fetchTable('form_submissions', 'id,submitted_at,checkout_completed_at,name,email,organisation_name,organisation_type,country,form_name,source_site,license_type,film_cut,group_size,valid_window,screening_date,promo_applied,stripe_price_id,stripe_event_id,forwarded,forward_status,wonder_redemption_code'),
       fetchTable('limelight_legacy_registrations')
     ]);
-    allSubmissions = submissions.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
-    allLegacy = legacy.sort((a, b) => new Date(b.registered_at || 0) - new Date(a.registered_at || 0));
+    allSubmissions = submissions.sort((a,b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+    allLegacy = legacy.sort((a,b) => new Date(b.registered_at||0) - new Date(a.registered_at||0));
     updateStats(); populateFilters(); filterSubmissions(); filterLegacy();
     document.getElementById('nav-sub-count').textContent = allSubmissions.length;
     document.getElementById('nav-leg-count').textContent = allLegacy.length;
-    document.getElementById('last-loaded').textContent = new Date().toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('last-loaded').textContent = new Date().toLocaleTimeString('en-AU', { hour:'2-digit', minute:'2-digit' });
   } catch(err) {
     const e = `<div class="error-box">⚠️ ${err.message}</div>`;
     document.getElementById('sub-table-wrap').innerHTML = e;
@@ -747,10 +814,10 @@ async function loadAll() {
 function updateStats() {
   const paid = allSubmissions.filter(s => s.checkout_completed_at).length;
   const legPaid = allLegacy.filter(l => l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'))).length;
-  document.getElementById('stat-total').textContent = allSubmissions.length;
-  document.getElementById('stat-paid').textContent = paid;
+  document.getElementById('stat-total').textContent   = allSubmissions.length;
+  document.getElementById('stat-paid').textContent    = paid;
   document.getElementById('stat-pending').textContent = allSubmissions.length - paid;
-  document.getElementById('stat-legacy').textContent = allLegacy.length;
+  document.getElementById('stat-legacy').textContent  = allLegacy.length;
   document.getElementById('stat-legacy-paid').textContent = legPaid;
 }
 
@@ -758,51 +825,57 @@ function populateFilters() {
   const films = [...new Set(allSubmissions.map(s => s.form_name).filter(Boolean))].sort();
   const filmSel = document.getElementById('sub-film');
   filmSel.innerHTML = '<option value="">All Films</option>';
-  films.forEach(f => { const o = document.createElement('option'); o.value = f; o.textContent = filmLabel(f); filmSel.appendChild(o); });
+  films.forEach(f => { const o = document.createElement('option'); o.value=f; o.textContent=filmLabel(f); filmSel.appendChild(o); });
 
-  const subC = [...new Set(allSubmissions.map(s => s.country).filter(Boolean))].sort();
-  const subCS = document.getElementById('sub-country');
-  subCS.innerHTML = '<option value="">All Countries</option>';
-  subC.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; subCS.appendChild(o); });
+  [...new Set(allSubmissions.map(s=>s.country).filter(Boolean))].sort().forEach(c => {
+    const o = document.createElement('option'); o.value=c; o.textContent=c;
+    document.getElementById('sub-country').appendChild(o);
+  });
 
-  const legC = [...new Set(allLegacy.map(l => l.country).filter(Boolean))].sort();
-  const legCS = document.getElementById('leg-country');
-  legCS.innerHTML = '<option value="">All Countries</option>';
-  legC.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; legCS.appendChild(o); });
+  [...new Set(allLegacy.map(l=>l.country).filter(Boolean))].sort().forEach(c => {
+    const o = document.createElement('option'); o.value=c; o.textContent=c;
+    document.getElementById('leg-country').appendChild(o);
+  });
 }
 
 function filmLabel(n) {
-  return { 'TFH-License-Form': 'The First Hymn', 'TH-License-Form': 'The Hopeful', 'LL-License-Form': 'Limelight', 'LL-Education-License': 'Limelight (Education)', 'TBOJ-Host-Form': 'The Book of Job' }[n] || n;
+  return {'TFH-License-Form':'The First Hymn','TH-License-Form':'The Hopeful','LL-License-Form':'Limelight','LL-Education-License':'Limelight (Education)','TBOJ-Host-Form':'The Book of Job'}[n]||n;
 }
 
 function filterSubmissions() {
-  const q = document.getElementById('sub-search').value.toLowerCase();
-  const film = document.getElementById('sub-film').value;
-  const status = document.getElementById('sub-status').value;
+  const q       = document.getElementById('sub-search').value.toLowerCase();
+  const film    = document.getElementById('sub-film').value;
+  const status  = document.getElementById('sub-status').value;
   const country = document.getElementById('sub-country').value;
+  const dateVal = document.getElementById('sub-date').value;
+  const bounds  = dateRangeBounds(dateVal, 'sub-date-from', 'sub-date-to');
+
   filteredSubmissions = allSubmissions.filter(s => {
-    const text = [s.name, s.email, s.organisation_name].join(' ').toLowerCase();
-    if (q && !text.includes(q)) return false;
-    if (film && s.form_name !== film) return false;
-    if (country && s.country !== country) return false;
-    if (status === 'paid' && !s.checkout_completed_at) return false;
-    if (status === 'pending' && s.checkout_completed_at) return false;
+    if (q && ![s.name,s.email,s.organisation_name].join(' ').toLowerCase().includes(q)) return false;
+    if (film    && s.form_name !== film)   return false;
+    if (country && s.country  !== country) return false;
+    if (status === 'paid'    && !s.checkout_completed_at) return false;
+    if (status === 'pending' &&  s.checkout_completed_at) return false;
+    if (dateVal && !inDateRange(s.submitted_at, bounds))   return false;
     return true;
   });
   subPage = 1; renderSubmissionsTable();
 }
 
 function filterLegacy() {
-  const q = document.getElementById('leg-search').value.toLowerCase();
-  const status = document.getElementById('leg-status').value;
+  const q       = document.getElementById('leg-search').value.toLowerCase();
+  const status  = document.getElementById('leg-status').value;
   const country = document.getElementById('leg-country').value;
+  const dateVal = document.getElementById('leg-date').value;
+  const bounds  = dateRangeBounds(dateVal, 'leg-date-from', 'leg-date-to');
+
   filteredLegacy = allLegacy.filter(l => {
-    const text = [l.name, l.email, l.school_name].join(' ').toLowerCase();
-    if (q && !text.includes(q)) return false;
+    if (q && ![l.name,l.email,l.school_name].join(' ').toLowerCase().includes(q)) return false;
     if (country && l.country !== country) return false;
     const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
-    if (status === 'paid' && !isPaid) return false;
-    if (status === 'unpaid' && isPaid) return false;
+    if (status === 'paid'   && !isPaid) return false;
+    if (status === 'unpaid' &&  isPaid) return false;
+    if (dateVal && !inDateRange(l.registered_at, bounds)) return false;
     return true;
   });
   legPage = 1; renderLegacyTable();
@@ -811,38 +884,50 @@ function filterLegacy() {
 function renderSubmissionsTable() {
   const wrap = document.getElementById('sub-table-wrap');
   const total = filteredSubmissions.length;
-  document.getElementById('sub-results-count').textContent = `${total} result${total !== 1 ? 's' : ''}`;
-  if (!total) { wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No submissions match your filters</p></div>'; document.getElementById('sub-pagination').innerHTML = ''; return; }
+  document.getElementById('sub-results-count').textContent = `${total} result${total!==1?'s':''}`;
+  if (!total) { wrap.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>No submissions match your filters</p></div>'; document.getElementById('sub-pagination').innerHTML=''; return; }
   const rows = filteredSubmissions.slice((subPage-1)*PAGE_SIZE, subPage*PAGE_SIZE);
-  let html = `<table><thead><tr><th>Name / Org</th><th>Email</th><th>Film</th><th>Licence Type</th><th>Country</th><th>Status</th><th>Submitted</th></tr></thead><tbody>`;
+  let html = `<table><thead><tr>
+    <th>Name / Org</th><th>Email</th><th>Film</th><th>Licence Type</th>
+    <th>Country</th><th>Status</th><th>Emails</th><th>Submitted</th>
+  </tr></thead><tbody>`;
   rows.forEach(s => {
     const paid = !!s.checkout_completed_at;
     const badge = paid ? '<span class="badge badge-green">Paid</span>' : '<span class="badge badge-orange">Pending</span>';
     html += `<tr onclick="openSubmissionModal('${s.id}')">
-      <td class="td-name"><div>${esc(s.name||'—')}</div><div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;font-weight:400;">${esc(s.organisation_name||'')}</div></td>
+      <td class="td-name">
+        <div>${esc(s.name||'—')}</div>
+        <div style="font-size:11px;color:var(--text-sub);margin-top:2px;font-weight:400;">${esc(s.organisation_name||'')}</div>
+      </td>
       <td>${esc(s.email||'—')}</td>
       <td>${esc(filmLabel(s.form_name||''))}</td>
-      <td style="max-width:160px;">${esc(s.license_type||'—')}</td>
+      <td style="max-width:150px;">${esc(s.license_type||'—')}</td>
       <td>${esc(s.country||'—')}</td>
       <td>${badge}</td>
+      <td>${cioLink(s.email)}</td>
       <td class="td-date">${s.submitted_at ? fmtDate(s.submitted_at) : '—'}</td>
     </tr>`;
   });
   html += '</tbody></table>';
   wrap.innerHTML = html;
-  renderPagination('sub', total, subPage, n => { subPage = n; renderSubmissionsTable(); });
+  renderPagination('sub', total, subPage, n => { subPage=n; renderSubmissionsTable(); });
 }
 
 function renderLegacyTable() {
   const wrap = document.getElementById('leg-table-wrap');
   const total = filteredLegacy.length;
-  document.getElementById('leg-results-count').textContent = `${total} result${total !== 1 ? 's' : ''}`;
-  if (!total) { wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No registrations match your filters</p></div>'; document.getElementById('leg-pagination').innerHTML = ''; return; }
+  document.getElementById('leg-results-count').textContent = `${total} result${total!==1?'s':''}`;
+  if (!total) { wrap.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>No registrations match your filters</p></div>'; document.getElementById('leg-pagination').innerHTML=''; return; }
   const rows = filteredLegacy.slice((legPage-1)*PAGE_SIZE, legPage*PAGE_SIZE);
-  let html = `<table><thead><tr><th>Name</th><th>Email</th><th>School / Org</th><th>Type</th><th>Country</th><th>Entries</th><th>Status</th><th>Registered</th></tr></thead><tbody>`;
+  let html = `<table><thead><tr>
+    <th>Name</th><th>Email</th><th>School / Org</th><th>Type</th>
+    <th>Country</th><th>Entries</th><th>Status</th><th>Emails</th><th>Registered</th>
+  </tr></thead><tbody>`;
   rows.forEach(l => {
     const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
-    const badge = isPaid ? '<span class="badge badge-green">Paid</span>' : (l.status && l.status.toLowerCase().includes('not paid') ? '<span class="badge badge-red">Not Paid</span>' : `<span class="badge badge-grey">${esc(l.status||'—')}</span>`);
+    const badge = isPaid ? '<span class="badge badge-green">Paid</span>' :
+      (l.status && l.status.toLowerCase().includes('not paid') ? '<span class="badge badge-red">Not Paid</span>' :
+      `<span class="badge badge-grey">${esc(l.status||'—')}</span>`);
     html += `<tr onclick="openLegacyModal('${l.id}')">
       <td class="td-name">${esc(l.name||'—')}</td>
       <td>${esc(l.email||'—')}</td>
@@ -851,29 +936,30 @@ function renderLegacyTable() {
       <td>${esc(l.country||'—')}</td>
       <td>${l.entries_used??0} / ${l.entries_bought??0}</td>
       <td>${badge}</td>
+      <td>${cioLink(l.email)}</td>
       <td class="td-date">${l.registered_at ? fmtDate(l.registered_at) : '—'}</td>
     </tr>`;
   });
   html += '</tbody></table>';
   wrap.innerHTML = html;
-  renderPagination('leg', total, legPage, n => { legPage = n; renderLegacyTable(); });
+  renderPagination('leg', total, legPage, n => { legPage=n; renderLegacyTable(); });
 }
 
 function renderPagination(id, total, current, onPage) {
   const pages = Math.ceil(total / PAGE_SIZE);
   const el = document.getElementById(`${id}-pagination`);
-  if (pages <= 1) { el.innerHTML = ''; return; }
+  if (pages <= 1) { el.innerHTML=''; return; }
   el.innerHTML = `<button class="page-btn" onclick="(${onPage.toString()})(${current-1})" ${current===1?'disabled':''}>‹ Prev</button><span class="page-info">Page ${current} of ${pages}</span><button class="page-btn" onclick="(${onPage.toString()})(${current+1})" ${current===pages?'disabled':''}>Next ›</button>`;
 }
 
 function openSubmissionModal(id) {
-  const s = allSubmissions.find(x => x.id === id);
-  if (!s) return;
+  const s = allSubmissions.find(x => x.id===id); if (!s) return;
   const paid = !!s.checkout_completed_at;
   const badge = paid ? '<span class="badge badge-green">Paid</span>' : '<span class="badge badge-orange">Pending Payment</span>';
   document.getElementById('modal-title').textContent = s.name || 'Submission Details';
+  const cioHref = s.email ? `https://fly.customer.io/workspaces/${CIO_WS}/journeys/people/${encodeURIComponent(s.email)}/sent` : null;
   document.getElementById('modal-body').innerHTML = `
-    <div style="margin-bottom:18px;">${badge}</div>
+    <div style="margin-bottom:18px;display:flex;gap:10px;align-items:center;">${badge}${cioHref ? `<a href="${cioHref}" target="_blank" class="cio-link" style="font-size:13px;">View Email Deliveries →</a>` : ''}</div>
     <div class="detail-group"><div class="detail-group-title">Contact</div>
       ${dr('Name',s.name)}${dr('Email',s.email)}${dr('Organisation',s.organisation_name)}${dr('Org Type',s.organisation_type)}${dr('Country',s.country)}</div>
     <div class="detail-group"><div class="detail-group-title">Licence</div>
@@ -886,13 +972,15 @@ function openSubmissionModal(id) {
 }
 
 function openLegacyModal(id) {
-  const l = allLegacy.find(x => x.id === id);
-  if (!l) return;
+  const l = allLegacy.find(x => x.id===id); if (!l) return;
   const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
-  const badge = isPaid ? '<span class="badge badge-green">Paid</span>' : (l.status && l.status.toLowerCase().includes('not paid') ? '<span class="badge badge-red">Not Paid</span>' : `<span class="badge badge-grey">${esc(l.status||'—')}</span>`);
+  const badge = isPaid ? '<span class="badge badge-green">Paid</span>' :
+    (l.status && l.status.toLowerCase().includes('not paid') ? '<span class="badge badge-red">Not Paid</span>' :
+    `<span class="badge badge-grey">${esc(l.status||'—')}</span>`);
   document.getElementById('modal-title').textContent = l.name || 'Legacy Registration';
+  const cioHref = l.email ? `https://fly.customer.io/workspaces/${CIO_WS}/journeys/people/${encodeURIComponent(l.email)}/sent` : null;
   document.getElementById('modal-body').innerHTML = `
-    <div style="margin-bottom:18px;">${badge}</div>
+    <div style="margin-bottom:18px;display:flex;gap:10px;align-items:center;">${badge}${cioHref ? `<a href="${cioHref}" target="_blank" class="cio-link" style="font-size:13px;">View Email Deliveries →</a>` : ''}</div>
     <div class="detail-group"><div class="detail-group-title">Contact</div>
       ${dr('Name',l.name)}${dr('Email',l.email)}${dr('School / Org',l.school_name)}${dr('School Type',l.school_type)}${dr('Country',l.country)}${dr('Address',l.address)}</div>
     <div class="detail-group"><div class="detail-group-title">Licence Usage</div>
@@ -905,11 +993,11 @@ function openLegacyModal(id) {
 }
 
 function dr(label, value, mono=false) {
-  const display = (value===null||value===undefined||value==='') ? '<span style="color:rgba(255,255,255,0.18)">—</span>' : esc(String(value));
+  const display = (value===null||value===undefined||value==='') ? '<span style="color:var(--text-sub)">—</span>' : esc(String(value));
   return `<div class="detail-row"><div class="detail-key">${label}</div><div class="detail-val${mono?' mono':''}">${display}</div></div>`;
 }
 
-function openModal()  { document.getElementById('modal-overlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function openModal()  { document.getElementById('modal-overlay').classList.add('open');    document.body.style.overflow='hidden'; }
 function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
 function closeModalOnBg(e) { if (e.target===document.getElementById('modal-overlay')) closeModal(); }
 document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
@@ -922,16 +1010,14 @@ function switchTab(tab) {
   document.getElementById('page-title').textContent = tab==='submissions' ? 'Licence Submissions' : 'Legacy Registrations (Limelight)';
 }
 
-function esc(str) {
-  if (!str && str!==0) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function esc(s) {
+  if (!s && s!==0) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function fmtDate(iso) {
-  if (!iso) return '—';
   return new Date(iso).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
 }
 function fmtDateFull(iso) {
-  if (!iso) return '—';
   return new Date(iso).toLocaleString('en-AU', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
 }
 
