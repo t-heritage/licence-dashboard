@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Licence Dashboard — Heritage Films</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1a1a2e;
+    --navy-light: #16213e;
+    --accent: #e94560;
+    --accent-hover: #c73652;
+    --bg: #f4f5f7;
+    --surface: #ffffff;
+    --border: #e2e4e9;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --green: #10b981;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --sidebar-w: 220px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .sidebar-logo .brand {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+  }
+
+  .sidebar-logo .sub {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .sidebar-nav {
+    padding: 16px 12px;
+    flex: 1;
+  }
+
+  .nav-label {
+    color: rgba(255,255,255,0.35);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 8px;
+    margin-bottom: 8px;
+    margin-top: 16px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    color: rgba(255,255,255,0.65);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+  .nav-item.active { background: var(--accent); color: #fff; }
+
+  .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+
+  .badge-count {
+    margin-left: auto;
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.8);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 20px;
+  }
+
+  .nav-item.active .badge-count { background: rgba(255,255,255,0.25); color: #fff; }
+
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.35);
+    font-size: 11px;
+  }
+
+  /* MAIN CONTENT */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .topbar h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .topbar .refresh-btn {
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .topbar .refresh-btn:hover { background: var(--accent); }
+
+  .content {
+    padding: 24px 28px;
+    flex: 1;
+  }
+
+  /* STAT CARDS */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    transition: box-shadow 0.15s;
+  }
+
+  .stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+  }
+
+  .stat-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  .stat-card.accent .stat-value { color: var(--accent); }
+  .stat-card.green .stat-value { color: var(--green); }
+  .stat-card.orange .stat-value { color: var(--orange); }
+
+  /* TAB PANEL */
+  .panel {
+    background: var(--surface);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  /* FILTERS */
+  .filters {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 360px;
+  }
+
+  .search-wrap .icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 9px 12px 9px 36px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .search-input:focus { border-color: var(--navy); }
+
+  .filter-select {
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    cursor: pointer;
+    min-width: 140px;
+  }
+
+  .filter-select:focus { border-color: var(--navy); }
+
+  .results-count {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* TABLE */
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead th {
+    background: #f8f9fa;
+    padding: 11px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  thead th:hover { color: var(--navy); }
+  thead th.sorted { color: var(--accent); }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f8fafc; }
+
+  tbody td {
+    padding: 11px 14px;
+    vertical-align: middle;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .td-name { font-weight: 600; }
+  .td-email { color: var(--muted); }
+  .td-date { color: var(--muted); white-space: nowrap; }
+
+  /* STATUS BADGES */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .badge::before { content: '●'; font-size: 8px; }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-orange { background: #fef3c7; color: #92400e; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-grey { background: #f3f4f6; color: #4b5563; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 15px; }
+
+  /* SPINNER */
+  .spinner-wrap {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ERROR */
+  .error-box {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 20px;
+    font-size: 14px;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal-panel {
+    background: var(--surface);
+    width: 480px;
+    max-width: 95vw;
+    height: 100vh;
+    overflow-y: auto;
+    box-shadow: -8px 0 32px rgba(0,0,0,0.15);
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-overlay.open .modal-panel { transform: translateX(0); }
+
+  .modal-header {
+    padding: 24px 24px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    flex: 1;
+    margin-right: 12px;
+  }
+
+  .modal-close {
+    background: var(--bg);
+    border: none;
+    color: var(--muted);
+    font-size: 18px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .modal-close:hover { background: var(--accent); color: #fff; }
+
+  .modal-body { padding: 20px 24px; flex: 1; }
+
+  .detail-group {
+    margin-bottom: 20px;
+  }
+
+  .detail-group-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--accent);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+
+  .detail-key {
+    color: var(--muted);
+    min-width: 130px;
+    flex-shrink: 0;
+    font-weight: 500;
+  }
+
+  .detail-val {
+    color: var(--text);
+    word-break: break-word;
+    flex: 1;
+  }
+
+  .detail-val.mono {
+    font-family: monospace;
+    font-size: 11px;
+    background: var(--bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  /* PAGINATION */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .page-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--text);
+    transition: all 0.15s;
+  }
+
+  .page-btn:hover:not(:disabled) { border-color: var(--navy); background: var(--navy); color: #fff; }
+  .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .page-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .page-info { font-size: 13px; color: var(--muted); }
+
+  /* VIEW toggle hidden for now - single view per tab */
+  .tab-hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Heritage Films</div>
+    <div class="sub">Licence Dashboard</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Licences</div>
+    <button class="nav-item active" onclick="switchTab('submissions')" id="nav-submissions">
+      <span class="icon">📋</span> Submissions
+      <span class="badge-count" id="nav-sub-count">—</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('legacy')" id="nav-legacy">
+      <span class="icon">🎞️</span> Legacy (Limelight)
+      <span class="badge-count" id="nav-leg-count">—</span>
+    </button>
+  </nav>
+  <div class="sidebar-footer">
+    Last loaded: <span id="last-loaded">—</span>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <h1 id="page-title">Licence Submissions</h1>
+    <button class="refresh-btn" onclick="loadAll()">
+      ↻ Refresh
+    </button>
+  </div>
+
+  <div class="content">
+    <!-- STATS -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Submissions</div>
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-sub">across all films</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Checkout Completed</div>
+        <div class="stat-value" id="stat-paid">—</div>
+        <div class="stat-sub">payment confirmed</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">Pending Payment</div>
+        <div class="stat-value" id="stat-pending">—</div>
+        <div class="stat-sub">submitted, not paid</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Legacy Regs</div>
+        <div class="stat-value" id="stat-legacy">—</div>
+        <div class="stat-sub">Limelight historical</div>
+      </div>
+      <div class="stat-card accent">
+        <div class="stat-label">Legacy Paid</div>
+        <div class="stat-value" id="stat-legacy-paid">—</div>
+        <div class="stat-sub">confirmed payments</div>
+      </div>
+    </div>
+
+    <!-- SUBMISSIONS TAB -->
+    <div id="tab-submissions">
+      <div class="panel">
+        <div class="filters">
+          <div class="search-wrap">
+            <span class="icon">🔍</span>
+            <input class="search-input" type="text" placeholder="Search name, email, org…" id="sub-search" oninput="filterSubmissions()">
+          </div>
+          <select class="filter-select" id="sub-film" onchange="filterSubmissions()">
+            <option value="">All Films</option>
+          </select>
+          <select class="filter-select" id="sub-status" onchange="filterSubmissions()">
+            <option value="">All Statuses</option>
+            <option value="paid">Paid</option>
+            <option value="pending">Pending</option>
+          </select>
+          <select class="filter-select" id="sub-country" onchange="filterSubmissions()">
+            <option value="">All Countries</option>
+          </select>
+          <div class="results-count" id="sub-results-count"></div>
+        </div>
+        <div class="table-wrap" id="sub-table-wrap">
+          <div class="spinner-wrap"><div class="spinner"></div></div>
+        </div>
+        <div class="pagination" id="sub-pagination"></div>
+      </div>
+    </div>
+
+    <!-- LEGACY TAB -->
+    <div id="tab-legacy" class="tab-hidden">
+      <div class="panel">
+        <div class="filters">
+          <div class="search-wrap">
+            <span class="icon">🔍</span>
+            <input class="search-input" type="text" placeholder="Search name, email, school…" id="leg-search" oninput="filterLegacy()">
+          </div>
+          <select class="filter-select" id="leg-status" onchange="filterLegacy()">
+            <option value="">All Statuses</option>
+            <option value="paid">Paid</option>
+            <option value="unpaid">Not Paid</option>
+          </select>
+          <select class="filter-select" id="leg-country" onchange="filterLegacy()">
+            <option value="">All Countries</option>
+          </select>
+          <div class="results-count" id="leg-results-count"></div>
+        </div>
+        <div class="table-wrap" id="leg-table-wrap">
+          <div class="spinner-wrap"><div class="spinner"></div></div>
+        </div>
+        <div class="pagination" id="leg-pagination"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOnBg(event)">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Details</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// =====================
+// CONFIG
+// =====================
+const SUPABASE_URL = 'https://nwchcduhlhhppvyhxbpo.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_-CW4LY8e61BQX68E4494zA_K-8pRRQY';
+
+const PAGE_SIZE = 25;
+
+let allSubmissions = [];
+let filteredSubmissions = [];
+let subPage = 1;
+
+let allLegacy = [];
+let filteredLegacy = [];
+let legPage = 1;
+
+let sortCol = 'submitted_at';
+let sortDir = -1;
+
+// =====================
+// FETCH
+// =====================
+async function fetchTable(table, select = '*') {
+  const headers = {
+    'apikey': SUPABASE_KEY,
+    'Authorization': `Bearer ${SUPABASE_KEY}`,
+    'Range': '0-999',
+    'Prefer': 'count=exact'
+  };
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=${select}&limit=1000`, { headers });
+  if (!res.ok) throw new Error(`Failed to fetch ${table}: ${res.status}`);
+  return await res.json();
+}
+
+async function loadAll() {
+  document.getElementById('last-loaded').textContent = '…';
+
+  // Reset spinners
+  document.getElementById('sub-table-wrap').innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
+  document.getElementById('leg-table-wrap').innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
+
+  try {
+    const [submissions, legacy] = await Promise.all([
+      fetchTable('form_submissions', 'id,submitted_at,checkout_completed_at,name,email,organisation_name,organisation_type,country,form_name,source_site,license_type,film_cut,group_size,valid_window,screening_date,promo_applied,stripe_price_id,stripe_event_id,forwarded,forward_status,wonder_redemption_code'),
+      fetchTable('limelight_legacy_registrations')
+    ]);
+
+    allSubmissions = submissions.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+    allLegacy = legacy.sort((a, b) => new Date(b.registered_at || 0) - new Date(a.registered_at || 0));
+
+    updateStats();
+    populateFilters();
+    filterSubmissions();
+    filterLegacy();
+
+    document.getElementById('nav-sub-count').textContent = allSubmissions.length;
+    document.getElementById('nav-leg-count').textContent = allLegacy.length;
+    document.getElementById('last-loaded').textContent = new Date().toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
+
+  } catch (err) {
+    console.error(err);
+    const errHtml = `<div class="error-box">⚠️ ${err.message}</div>`;
+    document.getElementById('sub-table-wrap').innerHTML = errHtml;
+    document.getElementById('leg-table-wrap').innerHTML = errHtml;
+    document.getElementById('last-loaded').textContent = 'Error';
+  }
+}
+
+// =====================
+// STATS
+// =====================
+function updateStats() {
+  const paid = allSubmissions.filter(s => s.checkout_completed_at).length;
+  const pending = allSubmissions.filter(s => !s.checkout_completed_at).length;
+  const legPaid = allLegacy.filter(l => l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'))).length;
+
+  document.getElementById('stat-total').textContent = allSubmissions.length;
+  document.getElementById('stat-paid').textContent = paid;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-legacy').textContent = allLegacy.length;
+  document.getElementById('stat-legacy-paid').textContent = legPaid;
+}
+
+// =====================
+// FILTERS
+// =====================
+function populateFilters() {
+  // Film names from form_submissions
+  const films = [...new Set(allSubmissions.map(s => s.form_name).filter(Boolean))].sort();
+  const filmSel = document.getElementById('sub-film');
+  filmSel.innerHTML = '<option value="">All Films</option>';
+  films.forEach(f => {
+    const opt = document.createElement('option');
+    opt.value = f;
+    opt.textContent = filmLabel(f);
+    filmSel.appendChild(opt);
+  });
+
+  // Countries for submissions
+  const subCountries = [...new Set(allSubmissions.map(s => s.country).filter(Boolean))].sort();
+  const subCountrySel = document.getElementById('sub-country');
+  subCountrySel.innerHTML = '<option value="">All Countries</option>';
+  subCountries.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    subCountrySel.appendChild(opt);
+  });
+
+  // Countries for legacy
+  const legCountries = [...new Set(allLegacy.map(l => l.country).filter(Boolean))].sort();
+  const legCountrySel = document.getElementById('leg-country');
+  legCountrySel.innerHTML = '<option value="">All Countries</option>';
+  legCountries.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    legCountrySel.appendChild(opt);
+  });
+}
+
+function filmLabel(formName) {
+  const map = {
+    'TFH-License-Form': 'The First Hymn',
+    'TH-License-Form': 'The Hopeful',
+    'LL-License-Form': 'Limelight',
+    'LL-Education-License': 'Limelight (Education)',
+    'TBOJ-Host-Form': 'The Book of Job'
+  };
+  return map[formName] || formName;
+}
+
+function filterSubmissions() {
+  const q = document.getElementById('sub-search').value.toLowerCase();
+  const film = document.getElementById('sub-film').value;
+  const status = document.getElementById('sub-status').value;
+  const country = document.getElementById('sub-country').value;
+
+  filteredSubmissions = allSubmissions.filter(s => {
+    const text = [s.name, s.email, s.organisation_name].join(' ').toLowerCase();
+    if (q && !text.includes(q)) return false;
+    if (film && s.form_name !== film) return false;
+    if (country && s.country !== country) return false;
+    if (status === 'paid' && !s.checkout_completed_at) return false;
+    if (status === 'pending' && s.checkout_completed_at) return false;
+    return true;
+  });
+
+  subPage = 1;
+  renderSubmissionsTable();
+}
+
+function filterLegacy() {
+  const q = document.getElementById('leg-search').value.toLowerCase();
+  const status = document.getElementById('leg-status').value;
+  const country = document.getElementById('leg-country').value;
+
+  filteredLegacy = allLegacy.filter(l => {
+    const text = [l.name, l.email, l.school_name].join(' ').toLowerCase();
+    if (q && !text.includes(q)) return false;
+    if (country && l.country !== country) return false;
+    if (status === 'paid') {
+      const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
+      if (!isPaid) return false;
+    }
+    if (status === 'unpaid') {
+      const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
+      if (isPaid) return false;
+    }
+    return true;
+  });
+
+  legPage = 1;
+  renderLegacyTable();
+}
+
+// =====================
+// RENDER - SUBMISSIONS
+// =====================
+function renderSubmissionsTable() {
+  const wrap = document.getElementById('sub-table-wrap');
+  const total = filteredSubmissions.length;
+  document.getElementById('sub-results-count').textContent = `${total} result${total !== 1 ? 's' : ''}`;
+
+  if (total === 0) {
+    wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No submissions match your filters</p></div>';
+    document.getElementById('sub-pagination').innerHTML = '';
+    return;
+  }
+
+  const start = (subPage - 1) * PAGE_SIZE;
+  const rows = filteredSubmissions.slice(start, start + PAGE_SIZE);
+
+  let html = `<table>
+    <thead><tr>
+      <th>Name / Org</th>
+      <th>Email</th>
+      <th>Film</th>
+      <th>Licence Type</th>
+      <th>Country</th>
+      <th>Status</th>
+      <th>Submitted</th>
+    </tr></thead>
+    <tbody>`;
+
+  rows.forEach(s => {
+    const paid = !!s.checkout_completed_at;
+    const badge = paid
+      ? '<span class="badge badge-green">Paid</span>'
+      : '<span class="badge badge-orange">Pending</span>';
+    const date = s.submitted_at ? fmtDate(s.submitted_at) : '—';
+    const org = s.organisation_name || '—';
+    const name = s.name || '—';
+    const film = filmLabel(s.form_name || '');
+
+    html += `<tr onclick="openSubmissionModal('${s.id}')">
+      <td class="td-name">
+        <div>${esc(name)}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">${esc(org)}</div>
+      </td>
+      <td class="td-email">${esc(s.email || '—')}</td>
+      <td>${esc(film)}</td>
+      <td style="max-width:160px;">${esc(s.license_type || '—')}</td>
+      <td>${esc(s.country || '—')}</td>
+      <td>${badge}</td>
+      <td class="td-date">${date}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+  renderPagination('sub', total, subPage, n => { subPage = n; renderSubmissionsTable(); });
+}
+
+// =====================
+// RENDER - LEGACY
+// =====================
+function renderLegacyTable() {
+  const wrap = document.getElementById('leg-table-wrap');
+  const total = filteredLegacy.length;
+  document.getElementById('leg-results-count').textContent = `${total} result${total !== 1 ? 's' : ''}`;
+
+  if (total === 0) {
+    wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No registrations match your filters</p></div>';
+    document.getElementById('leg-pagination').innerHTML = '';
+    return;
+  }
+
+  const start = (legPage - 1) * PAGE_SIZE;
+  const rows = filteredLegacy.slice(start, start + PAGE_SIZE);
+
+  let html = `<table>
+    <thead><tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>School / Org</th>
+      <th>Type</th>
+      <th>Country</th>
+      <th>Entries</th>
+      <th>Status</th>
+      <th>Registered</th>
+    </tr></thead>
+    <tbody>`;
+
+  rows.forEach(l => {
+    const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
+    let badge;
+    if (isPaid) badge = '<span class="badge badge-green">Paid</span>';
+    else if (l.status && l.status.toLowerCase().includes('not paid')) badge = '<span class="badge badge-red">Not Paid</span>';
+    else badge = `<span class="badge badge-grey">${esc(l.status || '—')}</span>`;
+
+    const date = l.registered_at ? fmtDate(l.registered_at) : '—';
+
+    html += `<tr onclick="openLegacyModal('${l.id}')">
+      <td class="td-name">${esc(l.name || '—')}</td>
+      <td class="td-email">${esc(l.email || '—')}</td>
+      <td>${esc(l.school_name || '—')}</td>
+      <td>${esc(l.school_type || '—')}</td>
+      <td>${esc(l.country || '—')}</td>
+      <td>${l.entries_used ?? 0} / ${l.entries_bought ?? 0}</td>
+      <td>${badge}</td>
+      <td class="td-date">${date}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+  renderPagination('leg', total, legPage, n => { legPage = n; renderLegacyTable(); });
+}
+
+// =====================
+// PAGINATION
+// =====================
+function renderPagination(id, total, current, onPage) {
+  const pages = Math.ceil(total / PAGE_SIZE);
+  const el = document.getElementById(`${id}-pagination`);
+  if (pages <= 1) { el.innerHTML = ''; return; }
+
+  let html = `<button class="page-btn" onclick="(${onPage.toString()})(${current - 1})" ${current === 1 ? 'disabled' : ''}>‹ Prev</button>`;
+  html += `<span class="page-info">Page ${current} of ${pages}</span>`;
+  html += `<button class="page-btn" onclick="(${onPage.toString()})(${current + 1})" ${current === pages ? 'disabled' : ''}>Next ›</button>`;
+  el.innerHTML = html;
+}
+
+// =====================
+// MODALS
+// =====================
+function openSubmissionModal(id) {
+  const s = allSubmissions.find(x => x.id === id);
+  if (!s) return;
+
+  const paid = !!s.checkout_completed_at;
+  const badge = paid
+    ? '<span class="badge badge-green">Paid</span>'
+    : '<span class="badge badge-orange">Pending Payment</span>';
+
+  document.getElementById('modal-title').textContent = s.name || 'Submission Details';
+
+  const payloadDetails = s.payload ? Object.entries(s.payload).filter(([k, v]) => v !== null && v !== '' && v !== false).map(([k, v]) => `
+    <div class="detail-row">
+      <div class="detail-key">${esc(k)}</div>
+      <div class="detail-val">${esc(String(v))}</div>
+    </div>`).join('') : '';
+
+  document.getElementById('modal-body').innerHTML = `
+    <div style="margin-bottom:16px;">${badge}</div>
+
+    <div class="detail-group">
+      <div class="detail-group-title">Contact</div>
+      ${dr('Name', s.name)}
+      ${dr('Email', s.email)}
+      ${dr('Organisation', s.organisation_name)}
+      ${dr('Org Type', s.organisation_type)}
+      ${dr('Country', s.country)}
+    </div>
+
+    <div class="detail-group">
+      <div class="detail-group-title">Licence</div>
+      ${dr('Film', filmLabel(s.form_name))}
+      ${dr('Source Site', s.source_site)}
+      ${dr('Licence Type', s.license_type)}
+      ${dr('Film Cut', s.film_cut)}
+      ${dr('Group Size', s.group_size)}
+      ${dr('Valid Window', s.valid_window)}
+      ${dr('Screening Date', s.screening_date)}
+      ${dr('Promo Applied', s.promo_applied ? 'Yes' : 'No')}
+      ${dr('Wonder Code', s.wonder_redemption_code)}
+    </div>
+
+    <div class="detail-group">
+      <div class="detail-group-title">Payment</div>
+      ${dr('Submitted', s.submitted_at ? fmtDateFull(s.submitted_at) : '—')}
+      ${dr('Checkout Completed', s.checkout_completed_at ? fmtDateFull(s.checkout_completed_at) : 'Not completed')}
+      ${dr('Stripe Event', s.stripe_event_id, true)}
+      ${dr('Stripe Price ID', s.stripe_price_id, true)}
+    </div>
+
+    <div class="detail-group">
+      <div class="detail-group-title">System</div>
+      ${dr('ID', s.id, true)}
+      ${dr('Forwarded', s.forwarded ? 'Yes' : 'No')}
+      ${dr('Forward Status', s.forward_status)}
+    </div>
+  `;
+
+  openModal();
+}
+
+function openLegacyModal(id) {
+  const l = allLegacy.find(x => x.id === id);
+  if (!l) return;
+
+  const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
+  let badge;
+  if (isPaid) badge = '<span class="badge badge-green">Paid</span>';
+  else if (l.status && l.status.toLowerCase().includes('not paid')) badge = '<span class="badge badge-red">Not Paid</span>';
+  else badge = `<span class="badge badge-grey">${esc(l.status || '—')}</span>`;
+
+  document.getElementById('modal-title').textContent = l.name || 'Legacy Registration';
+
+  document.getElementById('modal-body').innerHTML = `
+    <div style="margin-bottom:16px;">${badge}</div>
+
+    <div class="detail-group">
+      <div class="detail-group-title">Contact</div>
+      ${dr('Name', l.name)}
+      ${dr('Email', l.email)}
+      ${dr('School / Org', l.school_name)}
+      ${dr('School Type', l.school_type)}
+      ${dr('Country', l.country)}
+      ${dr('Address', l.address)}
+    </div>
+
+    <div class="detail-group">
+      <div class="detail-group-title">Licence Usage</div>
+      ${dr('Entries Bought', l.entries_bought)}
+      ${dr('Entries Used', l.entries_used)}
+      ${dr('Status', l.status)}
+      ${dr('Wonder Code', l.wonder_redemption_code)}
+      ${dr('Promo Code Used', l.promo_code_used)}
+    </div>
+
+    <div class="detail-group">
+      <div class="detail-group-title">Payment</div>
+      ${dr('Registered At', l.registered_at ? fmtDateFull(l.registered_at) : '—')}
+      ${dr('Paid At', l.paid_at ? fmtDateFull(l.paid_at) : 'Not paid')}
+      ${dr('Stripe Session', l.stripe_session_id, true)}
+      ${dr('Stripe Event', l.stripe_event_id, true)}
+    </div>
+
+    <div class="detail-group">
+      <div class="detail-group-title">System</div>
+      ${dr('ID', l.id, true)}
+      ${dr('Event Key', l.event_key, true)}
+      ${dr('School Key', l.school_key, true)}
+    </div>
+  `;
+
+  openModal();
+}
+
+function dr(label, value, mono = false) {
+  const display = value === null || value === undefined || value === '' ? '<span style="color:var(--muted)">—</span>' : esc(String(value));
+  return `<div class="detail-row">
+    <div class="detail-key">${label}</div>
+    <div class="detail-val${mono ? ' mono' : ''}">${display}</div>
+  </div>`;
+}
+
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// =====================
+// TABS
+// =====================
+function switchTab(tab) {
+  document.getElementById('tab-submissions').classList.toggle('tab-hidden', tab !== 'submissions');
+  document.getElementById('tab-legacy').classList.toggle('tab-hidden', tab !== 'legacy');
+  document.getElementById('nav-submissions').classList.toggle('active', tab === 'submissions');
+  document.getElementById('nav-legacy').classList.toggle('active', tab === 'legacy');
+  document.getElementById('page-title').textContent = tab === 'submissions' ? 'Licence Submissions' : 'Legacy Registrations (Limelight)';
+}
+
+// =====================
+// UTILS
+// =====================
+function esc(str) {
+  if (!str && str !== 0) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function fmtDateFull(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+// =====================
+// INIT
+// =====================
+loadAll();
+</script>
+</body>
+</html>
