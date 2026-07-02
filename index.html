@@ -191,6 +191,17 @@
     background: var(--slate);
   }
 
+  /* Hide card footer on desktop */
+  .mob-row-footer { display: none; }
+
+  /* Mobile topbar actions always flex, hidden on desktop */
+  .mob-topbar-actions {
+    display: flex;
+    gap: 8px;
+    padding: 12px 14px;
+    border-top: 1px solid var(--line);
+  }
+
   /* ── MOBILE RESPONSIVE ── */
   @media (max-width: 700px) {
     .mobile-bar { display: flex; }
@@ -211,43 +222,76 @@
       padding-top: 56px;
     }
 
-    .topbar {
-      display: none;
-    }
+    .topbar { display: none; }
 
-    .content {
-      padding: 16px 14px;
-    }
+    .content { padding: 14px 12px; }
 
     .stats-grid {
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
-    .stat-value { font-size: 26px; }
+    .stat-card { padding: 16px 14px; }
+    .stat-value { font-size: 28px; }
+    .stat-label { font-size: 9px; }
 
     .filters {
-      padding: 12px 14px;
+      padding: 10px 12px;
       gap: 8px;
     }
 
-    .search-wrap { max-width: 100%; }
+    .search-wrap { max-width: 100%; min-width: 0; flex: 1 1 100%; }
+    .filter-select { min-width: 0; flex: 1 1 calc(50% - 4px); font-size: 12px; padding: 8px 8px; }
 
-    .filter-select { min-width: 0; font-size: 12px; }
+    /* Hide non-essential table columns on mobile */
+    .col-hide-mob { display: none; }
 
-    thead th { font-size: 9px; padding: 9px 10px; }
-    tbody td { padding: 10px 10px; font-size: 12px; }
+    /* Card-style rows instead of wide table */
+    table { font-size: 13px; }
+    thead { display: none; }
 
-    .modal-panel { width: 100vw; }
+    tbody tr {
+      display: block;
+      padding: 14px 14px;
+      border-bottom: 1px solid var(--line);
+    }
 
-    /* Mobile topbar actions inside the drawer */
-    .mob-topbar-actions {
+    tbody tr:hover { background: var(--fire-dim); }
+
+    tbody td {
+      display: block;
+      max-width: 100%;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      padding: 2px 0;
+    }
+
+    /* Name cell — bigger */
+    tbody td.td-name { font-size: 15px; margin-bottom: 4px; }
+    tbody td.td-name > div:first-child { font-size: 15px; font-weight: 700; }
+
+    /* Hide less-important cells on mobile */
+    tbody td.mob-hide { display: none; }
+
+    /* Show card footer on mobile */
+    .mob-row-footer {
       display: flex;
-      gap: 8px;
-      padding: 12px 14px;
-      border-top: 1px solid var(--line);
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
     }
+
+    .modal-panel {
+      width: 100vw;
+      max-width: 100vw;
+    }
+
+    .modal-body { padding: 16px 18px; }
+    .modal-header { padding: 18px 18px 14px; }
+    .detail-key { min-width: 110px; font-size: 12px; }
+    .detail-val { font-size: 12px; }
   }
 
   .topbar {
@@ -1025,14 +1069,15 @@ function renderSubmissionsTable() {
       <td class="td-name">
         <div>${esc(s.name||'—')}</div>
         <div style="font-size:11px;color:var(--text-sub);margin-top:2px;font-weight:400;">${esc(s.organisation_name||'')}</div>
+        <div class="mob-row-footer">${badge}<span style="font-size:11px;color:var(--text-sub);">${s.submitted_at?fmtDate(s.submitted_at):'—'}</span></div>
       </td>
-      <td>${esc(s.email||'—')}</td>
-      <td>${esc(filmLabel(s.form_name||''))}</td>
-      <td style="max-width:150px;">${esc(s.license_type||'—')}</td>
-      <td>${esc(s.country||'—')}</td>
-      <td>${badge}</td>
-      <td>${cioLink(s.email)}</td>
-      <td class="td-date">${s.submitted_at ? fmtDate(s.submitted_at) : '—'}</td>
+      <td class="mob-hide">${esc(s.email||'—')}</td>
+      <td class="mob-hide">${esc(filmLabel(s.form_name||''))}</td>
+      <td class="mob-hide" style="max-width:150px;">${esc(s.license_type||'—')}</td>
+      <td class="mob-hide">${esc(s.country||'—')}</td>
+      <td class="mob-hide">${badge}</td>
+      <td class="mob-hide">${cioLink(s.email)}</td>
+      <td class="mob-hide td-date">${s.submitted_at ? fmtDate(s.submitted_at) : '—'}</td>
     </tr>`;
   });
   html += '</tbody></table>';
@@ -1056,15 +1101,19 @@ function renderLegacyTable() {
       (l.status && l.status.toLowerCase().includes('not paid') ? '<span class="badge badge-red">Not Paid</span>' :
       `<span class="badge badge-grey">${esc(l.status||'—')}</span>`);
     html += `<tr onclick="openLegacyModal('${l.id}')">
-      <td class="td-name">${esc(l.name||'—')}</td>
-      <td>${esc(l.email||'—')}</td>
-      <td>${esc(l.school_name||'—')}</td>
-      <td>${esc(l.school_type||'—')}</td>
-      <td>${esc(l.country||'—')}</td>
-      <td>${l.entries_used??0} / ${l.entries_bought??0}</td>
-      <td>${badge}</td>
-      <td>${cioLink(l.email)}</td>
-      <td class="td-date">${l.registered_at ? fmtDate(l.registered_at) : '—'}</td>
+      <td class="td-name">
+        <div>${esc(l.name||'—')}</div>
+        <div style="font-size:11px;color:var(--text-sub);margin-top:2px;font-weight:400;">${esc(l.school_name||'')}</div>
+        <div class="mob-row-footer">${badge}<span style="font-size:11px;color:var(--text-sub);">${l.registered_at?fmtDate(l.registered_at):'—'}</span></div>
+      </td>
+      <td class="mob-hide">${esc(l.email||'—')}</td>
+      <td class="mob-hide">${esc(l.school_name||'—')}</td>
+      <td class="mob-hide">${esc(l.school_type||'—')}</td>
+      <td class="mob-hide">${esc(l.country||'—')}</td>
+      <td class="mob-hide">${l.entries_used??0} / ${l.entries_bought??0}</td>
+      <td class="mob-hide">${badge}</td>
+      <td class="mob-hide">${cioLink(l.email)}</td>
+      <td class="mob-hide td-date">${l.registered_at ? fmtDate(l.registered_at) : '—'}</td>
     </tr>`;
   });
   html += '</tbody></table>';
