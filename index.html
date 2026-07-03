@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Licence Dashboard — Heritage Films</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── THEME TOKENS ── */
+  :root {
+    --slate:    #0d1117;
+    --slate2:   #151b23;
+    --slate3:   #1c242e;
+    --fire:     #FF921E;
+    --fire-dim: rgba(255,146,30,0.12);
+    --white:    #ffffff;
+    --dim:      rgba(255,255,255,0.55);
+    --line:     rgba(255,255,255,0.06);
+    --text-sub: rgba(255,255,255,0.32);
+    --green:    #10b981;
+    --orange:   #f59e0b;
+    --red:      #ef4444;
+    --sidebar-w: 224px;
+    --helv: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  body.light {
+    --slate:    #f5f5f0;
+    --slate2:   #ffffff;
+    --slate3:   #ebebeb;
+    --white:    #111111;
+    --dim:      rgba(0,0,0,0.6);
+    --line:     rgba(0,0,0,0.08);
+    --text-sub: rgba(0,0,0,0.38);
+    --fire-dim: rgba(255,146,30,0.1);
+  }
+
+  body {
+    font-family: var(--helv);
+    background: var(--slate);
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  /* ── MOBILE TOPBAR ── */
+  .mobile-bar {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: var(--slate2);
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 200;
+  }
+
+  .mobile-bar .mob-logo { height: 24px; width: auto; object-fit: contain; }
+  .mobile-bar .mob-logo-text { font-size: 14px; font-weight: 700; color: var(--white); letter-spacing: -0.02em; }
+
+  .hamburger {
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    width: 36px; height: 36px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 18px; height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+
+  /* Drawer overlay */
+  .drawer-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 149;
+  }
+
+  .drawer-overlay.open { display: block; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--slate2);
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 150;
+  }
+
+  .sidebar-logo {
+    padding: 28px 22px 22px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .sidebar-logo img { height: 30px; width: auto; object-fit: contain; }
+
+  .sidebar-logo .sub {
+    color: var(--fire);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  .sidebar-nav { padding: 18px 12px; flex: 1; }
+
+  .nav-label {
+    color: var(--text-sub);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    padding: 0 10px;
+    margin-bottom: 8px;
+    margin-top: 18px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: var(--dim);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: var(--helv);
+    letter-spacing: 0.01em;
+  }
+
+  .nav-item:hover { background: var(--fire-dim); color: var(--white); }
+  .nav-item.active { background: var(--fire); color: #0d1117; }
+
+  .nav-item .icon { font-size: 15px; width: 20px; text-align: center; }
+
+  .badge-count {
+    margin-left: auto;
+    background: var(--line);
+    color: var(--dim);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-item.active .badge-count { background: rgba(13,17,23,0.2); color: #0d1117; }
+
+  .sidebar-footer {
+    padding: 18px 22px;
+    border-top: 1px solid var(--line);
+    color: var(--text-sub);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--slate);
+  }
+
+  /* Hide card footer on desktop */
+  .mob-row-footer { display: none; }
+
+  /* Mobile topbar actions always flex, hidden on desktop */
+  .mob-topbar-actions {
+    display: flex;
+    gap: 8px;
+    padding: 12px 14px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* ── MOBILE RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .mobile-bar { display: flex; }
+
+    .sidebar {
+      top: 0;
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      width: 80vw;
+      max-width: 300px;
+      padding-top: 56px;
+    }
+
+    .sidebar.open { transform: translateX(0); }
+
+    .main {
+      margin-left: 0;
+      padding-top: 56px;
+    }
+
+    .topbar { display: none; }
+
+    .content { padding: 14px 12px; }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card { padding: 16px 14px; }
+    .stat-value { font-size: 28px; }
+    .stat-label { font-size: 9px; }
+
+    .filters {
+      padding: 10px 12px;
+      gap: 8px;
+    }
+
+    .search-wrap { max-width: 100%; min-width: 0; flex: 1 1 100%; }
+    .filter-select { min-width: 0; flex: 1 1 calc(50% - 4px); font-size: 12px; padding: 8px 8px; }
+
+    /* Hide non-essential table columns on mobile */
+    .col-hide-mob { display: none; }
+
+    /* Card-style rows instead of wide table */
+    table { font-size: 13px; }
+    thead { display: none; }
+
+    tbody tr {
+      display: block;
+      padding: 14px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    tbody tr:hover { background: var(--fire-dim); }
+
+    tbody td {
+      display: block;
+      max-width: 100%;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      padding: 2px 0;
+    }
+
+    /* Name cell — bigger */
+    tbody td.td-name { font-size: 15px; margin-bottom: 4px; }
+    tbody td.td-name > div:first-child { font-size: 15px; font-weight: 700; }
+
+    /* Hide less-important cells on mobile */
+    tbody td.mob-hide { display: none; }
+
+    /* Show card footer on mobile */
+    .mob-row-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+
+    .modal-panel {
+      width: 100vw;
+      max-width: 100vw;
+    }
+
+    .modal-body { padding: 16px 18px; }
+    .modal-header { padding: 18px 18px 14px; }
+    .detail-key { min-width: 110px; font-size: 12px; }
+    .detail-val { font-size: 12px; }
+  }
+
+  .topbar {
+    background: var(--slate2);
+    border-bottom: 1px solid var(--line);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .topbar h1 { font-size: 16px; font-weight: 700; color: var(--white); letter-spacing: 0.01em; }
+  .topbar .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fire); margin-bottom: 3px; }
+
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+  /* ── THEME TOGGLE ── */
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--slate3);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: var(--helv);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--dim);
+    letter-spacing: 0.04em;
+    transition: all 0.15s;
+  }
+
+  .theme-toggle:hover { border-color: var(--fire); color: var(--fire); }
+  .theme-toggle .toggle-icon { font-size: 14px; }
+
+  .refresh-btn {
+    background: var(--fire);
+    color: #0d1117;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--helv);
+    letter-spacing: 0.04em;
+    transition: opacity 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .refresh-btn:hover { opacity: 0.85; }
+
+  .content { padding: 28px 32px; flex: 1; }
+
+  /* ── STAT CARDS ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--slate2);
+    border-radius: 12px;
+    padding: 22px 20px;
+    border: 1px solid var(--line);
+    transition: border-color 0.15s;
+  }
+
+  .stat-card:hover { border-color: rgba(255,146,30,0.3); }
+
+  .stat-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-sub);
+    margin-bottom: 12px;
+  }
+
+  .stat-value {
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-sub { font-size: 12px; color: var(--dim); margin-top: 6px; }
+  .stat-card.fire .stat-value   { color: var(--fire); }
+  .stat-card.green .stat-value  { color: var(--green); }
+  .stat-card.orange .stat-value { color: var(--orange); }
+
+  /* ── PANEL ── */
+  .panel {
+    background: var(--slate2);
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  /* ── FILTERS ── */
+  .filters {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 180px;
+    max-width: 300px;
+  }
+
+  .search-wrap .icon {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-sub);
+    font-size: 13px;
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 8px 10px 8px 32px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: var(--helv);
+    color: var(--white);
+    background: var(--slate3);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .search-input::placeholder { color: var(--text-sub); }
+  .search-input:focus { border-color: rgba(255,146,30,0.5); }
+
+  .filter-select {
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: var(--helv);
+    color: var(--white);
+    background: var(--slate3);
+    outline: none;
+    cursor: pointer;
+  }
+
+  .filter-select:focus { border-color: rgba(255,146,30,0.5); }
+
+  /* Custom date range row */
+  .date-custom {
+    display: none;
+    gap: 6px;
+    align-items: center;
+    width: 100%;
+    padding-top: 6px;
+  }
+
+  .date-custom.show { display: flex; }
+
+  .date-input {
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: var(--helv);
+    color: var(--white);
+    background: var(--slate3);
+    outline: none;
+    cursor: pointer;
+  }
+
+  .date-input:focus { border-color: rgba(255,146,30,0.5); }
+  .date-label { font-size: 11px; color: var(--text-sub); white-space: nowrap; }
+
+  .results-count {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--text-sub);
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+  thead th {
+    background: var(--slate3);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--text-sub);
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--fire-dim); }
+
+  tbody td {
+    padding: 11px 14px;
+    vertical-align: middle;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--dim);
+  }
+
+  .td-name { font-weight: 600; color: var(--white) !important; }
+  .td-date { white-space: nowrap; }
+
+  .cio-link {
+    color: var(--fire);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .cio-link:hover { text-decoration: underline; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  .badge::before { content: '●'; font-size: 7px; }
+  .badge-green  { background: rgba(16,185,129,0.15);  color: #34d399; border: 1px solid rgba(16,185,129,0.25); }
+  .badge-orange { background: rgba(245,158,11,0.15);  color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+  .badge-red    { background: rgba(239,68,68,0.15);   color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+  .badge-grey   { background: var(--fire-dim); color: var(--dim); border: 1px solid var(--line); }
+
+  /* ── EMPTY ── */
+  .empty-state { text-align: center; padding: 70px 20px; color: var(--text-sub); }
+  .empty-state .icon { font-size: 36px; margin-bottom: 14px; }
+  .empty-state p { font-size: 14px; }
+
+  /* ── SPINNER ── */
+  .spinner-wrap { text-align: center; padding: 70px 20px; }
+
+  .spinner {
+    display: inline-block;
+    width: 34px; height: 34px;
+    border: 3px solid var(--line);
+    border-top-color: var(--fire);
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── ERROR ── */
+  .error-box {
+    background: rgba(239,68,68,0.1);
+    color: #f87171;
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 20px;
+    font-size: 14px;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal-panel {
+    background: var(--slate2);
+    border-left: 1px solid var(--line);
+    width: 480px;
+    max-width: 95vw;
+    height: 100vh;
+    overflow-y: auto;
+    box-shadow: -16px 0 60px rgba(0,0,0,0.5);
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-overlay.open .modal-panel { transform: translateX(0); }
+
+  .modal-header {
+    padding: 26px 26px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: sticky;
+    top: 0;
+    background: var(--slate2);
+    border-bottom: 1px solid var(--line);
+    z-index: 2;
+  }
+
+  .modal-title { font-size: 17px; font-weight: 700; color: var(--white); flex: 1; margin-right: 12px; letter-spacing: -0.01em; }
+
+  .modal-close {
+    background: var(--slate3);
+    border: 1px solid var(--line);
+    color: var(--dim);
+    font-size: 16px;
+    cursor: pointer;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    font-family: var(--helv);
+  }
+
+  .modal-close:hover { background: var(--fire); color: #0d1117; border-color: var(--fire); }
+  .modal-body { padding: 22px 26px; flex: 1; }
+  .detail-group { margin-bottom: 22px; }
+
+  .detail-group-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--fire);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .detail-row { display: flex; gap: 12px; margin-bottom: 9px; font-size: 13px; }
+  .detail-key { color: var(--text-sub); min-width: 130px; flex-shrink: 0; font-weight: 500; }
+  .detail-val { color: var(--white); word-break: break-word; flex: 1; }
+  .detail-val.mono { font-family: monospace; font-size: 11px; background: var(--slate3); padding: 2px 7px; border-radius: 4px; color: var(--dim); }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px;
+    border-top: 1px solid var(--line);
+  }
+
+  .page-btn {
+    background: var(--slate3);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: var(--helv);
+    color: var(--dim);
+    transition: all 0.15s;
+  }
+
+  .page-btn:hover:not(:disabled) { border-color: var(--fire); color: var(--fire); background: var(--fire-dim); }
+  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .page-btn.active { background: var(--fire); border-color: var(--fire); color: #0d1117; font-weight: 700; }
+  .page-info { font-size: 12px; color: var(--text-sub); }
+
+  .tab-hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- MOBILE TOP BAR -->
+<div class="mobile-bar">
+  <img class="mob-logo" src="https://cdn.prod.website-files.com/60bff930d512a35b704b11f0/672307b15bce0246f6e1ef95_unnamed.avif" alt="Heritage Films" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+  <span class="mob-logo-text" style="display:none">Heritage Films</span>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <button class="theme-toggle" onclick="toggleTheme()" style="padding:6px 10px;font-size:11px;">
+      <span class="toggle-icon" id="theme-icon-mob">☀️</span>
+    </button>
+    <button class="hamburger" onclick="toggleDrawer()" id="hamburger-btn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</div>
+
+<!-- DRAWER OVERLAY -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <img src="https://cdn.prod.website-files.com/60bff930d512a35b704b11f0/672307b15bce0246f6e1ef95_unnamed.avif" alt="Heritage Films"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <div style="display:none;font-size:15px;font-weight:700;letter-spacing:-0.02em;">Heritage Films</div>
+    <div class="sub">Licence Dashboard</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Licences</div>
+    <button class="nav-item active" onclick="switchTab('submissions')" id="nav-submissions">
+      <span class="icon">📋</span> Submissions
+      <span class="badge-count" id="nav-sub-count">—</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('legacy')" id="nav-legacy">
+      <span class="icon">🎞️</span> Legacy (Limelight)
+      <span class="badge-count" id="nav-leg-count">—</span>
+    </button>
+  </nav>
+  <div class="mob-topbar-actions">
+    <button class="refresh-btn" onclick="loadAll();closeDrawer()" style="flex:1;justify-content:center;">↻ Refresh</button>
+  </div>
+  <div class="sidebar-footer">Refreshed <span id="last-loaded">—</span></div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="eyebrow">Heritage Films</div>
+      <h1 id="page-title">Licence Submissions</h1>
+    </div>
+    <div class="topbar-actions">
+      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
+        <span class="toggle-icon" id="theme-icon">☀️</span>
+        <span id="theme-label">Light</span>
+      </button>
+      <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Submissions</div>
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-sub">across all films</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Checkout Completed</div>
+        <div class="stat-value" id="stat-paid">—</div>
+        <div class="stat-sub">payment confirmed</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">Pending Payment</div>
+        <div class="stat-value" id="stat-pending">—</div>
+        <div class="stat-sub">submitted, not paid</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Legacy Regs</div>
+        <div class="stat-value" id="stat-legacy">—</div>
+        <div class="stat-sub">Limelight historical</div>
+      </div>
+      <div class="stat-card fire">
+        <div class="stat-label">Legacy Paid</div>
+        <div class="stat-value" id="stat-legacy-paid">—</div>
+        <div class="stat-sub">confirmed payments</div>
+      </div>
+    </div>
+
+    <!-- SUBMISSIONS TAB -->
+    <div id="tab-submissions">
+      <div class="panel">
+        <div class="filters">
+          <div class="search-wrap">
+            <span class="icon">🔍</span>
+            <input class="search-input" type="text" placeholder="Search name, email, org…" id="sub-search" oninput="filterSubmissions()">
+          </div>
+          <select class="filter-select" id="sub-film" onchange="filterSubmissions()">
+            <option value="">All Films</option>
+          </select>
+          <select class="filter-select" id="sub-status" onchange="filterSubmissions()">
+            <option value="">All Statuses</option>
+            <option value="paid">Paid</option>
+            <option value="pending">Pending</option>
+          </select>
+          <select class="filter-select" id="sub-country" onchange="filterSubmissions()">
+            <option value="">All Countries</option>
+          </select>
+          <select class="filter-select" id="sub-date" onchange="onSubDateChange()">
+            <option value="">All Time</option>
+            <option value="today">Today</option>
+            <option value="7">Last 7 Days</option>
+            <option value="30">Last 30 Days</option>
+            <option value="custom">Custom Range…</option>
+          </select>
+          <div class="date-custom" id="sub-date-custom">
+            <span class="date-label">From</span>
+            <input type="date" class="date-input" id="sub-date-from" onchange="filterSubmissions()">
+            <span class="date-label">To</span>
+            <input type="date" class="date-input" id="sub-date-to" onchange="filterSubmissions()">
+          </div>
+          <div class="results-count" id="sub-results-count"></div>
+        </div>
+        <div class="table-wrap" id="sub-table-wrap">
+          <div class="spinner-wrap"><div class="spinner"></div></div>
+        </div>
+        <div class="pagination" id="sub-pagination"></div>
+      </div>
+    </div>
+
+    <!-- LEGACY TAB -->
+    <div id="tab-legacy" class="tab-hidden">
+      <div class="panel">
+        <div class="filters">
+          <div class="search-wrap">
+            <span class="icon">🔍</span>
+            <input class="search-input" type="text" placeholder="Search name, email, school…" id="leg-search" oninput="filterLegacy()">
+          </div>
+          <select class="filter-select" id="leg-status" onchange="filterLegacy()">
+            <option value="">All Statuses</option>
+            <option value="paid">Paid</option>
+            <option value="unpaid">Not Paid</option>
+          </select>
+          <select class="filter-select" id="leg-country" onchange="filterLegacy()">
+            <option value="">All Countries</option>
+          </select>
+          <select class="filter-select" id="leg-date" onchange="onLegDateChange()">
+            <option value="">All Time</option>
+            <option value="today">Today</option>
+            <option value="7">Last 7 Days</option>
+            <option value="30">Last 30 Days</option>
+            <option value="custom">Custom Range…</option>
+          </select>
+          <div class="date-custom" id="leg-date-custom">
+            <span class="date-label">From</span>
+            <input type="date" class="date-input" id="leg-date-from" onchange="filterLegacy()">
+            <span class="date-label">To</span>
+            <input type="date" class="date-input" id="leg-date-to" onchange="filterLegacy()">
+          </div>
+          <div class="results-count" id="leg-results-count"></div>
+        </div>
+        <div class="table-wrap" id="leg-table-wrap">
+          <div class="spinner-wrap"><div class="spinner"></div></div>
+        </div>
+        <div class="pagination" id="leg-pagination"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOnBg(event)">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Details</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://nwchcduhlhhppvyhxbpo.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_-CW4LY8e61BQX68E4494zA_K-8pRRQY';
+const CIO_WS      = '98515';
+
+let cioIdMap = {};
+async function loadCioIds() {
+  const emails = [...new Set([...allSubmissions, ...allLegacy].map(r => r.email).filter(Boolean))];
+  if (!emails.length) return;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_cio_ids`, {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_emails: emails })
+    });
+    if (res.ok) (await res.json()).forEach(r => cioIdMap[r.email] = r.cio_id);
+  } catch (e) { console.error('cio id lookup failed', e); }
+}
+
+function cioIdent(email) { return cioIdMap[email] || encodeURIComponent(email); }
+
+const PAGE_SIZE = 25;
+let allSubmissions = [], filteredSubmissions = [], subPage = 1;
+let allLegacy = [], filteredLegacy = [], legPage = 1;
+let isDark = true;
+
+// ── THEME ──
+function toggleTheme() {
+  isDark = !isDark;
+  document.body.classList.toggle('light', !isDark);
+  document.getElementById('theme-icon').textContent  = isDark ? '☀️' : '🌙';
+  document.getElementById('theme-label').textContent = isDark ? 'Light' : 'Dark';
+}
+
+// ── DATE FILTER HELPERS ──
+function dateRangeBounds(val, fromId, toId) {
+  const now = new Date();
+  const startOfDay = d => { const x = new Date(d); x.setHours(0,0,0,0); return x; };
+  if (val === 'today')  return { from: startOfDay(now), to: null };
+  if (val === '7')      { const d = new Date(now); d.setDate(d.getDate()-6); return { from: startOfDay(d), to: null }; }
+  if (val === '30')     { const d = new Date(now); d.setDate(d.getDate()-29); return { from: startOfDay(d), to: null }; }
+  if (val === 'custom') {
+    const f = document.getElementById(fromId).value;
+    const t = document.getElementById(toId).value;
+    return {
+      from: f ? new Date(f + 'T00:00:00') : null,
+      to:   t ? new Date(t + 'T23:59:59') : null
+    };
+  }
+  return { from: null, to: null };
+}
+
+function inDateRange(isoStr, bounds) {
+  if (!bounds.from && !bounds.to) return true;
+  const d = new Date(isoStr);
+  if (bounds.from && d < bounds.from) return false;
+  if (bounds.to   && d > bounds.to)   return false;
+  return true;
+}
+
+function onSubDateChange() {
+  const val = document.getElementById('sub-date').value;
+  document.getElementById('sub-date-custom').classList.toggle('show', val === 'custom');
+  filterSubmissions();
+}
+
+function onLegDateChange() {
+  const val = document.getElementById('leg-date').value;
+  document.getElementById('leg-date-custom').classList.toggle('show', val === 'custom');
+  filterLegacy();
+}
+
+// ── CIO LINK ──
+function cioLink(email) {
+  if (!email) return '<span style="color:var(--text-sub)">—</span>';
+  const href = `https://fly.customer.io/workspaces/${CIO_WS}/journeys/people/${cioIdent(email)}/sent`;
+  return `<a class="cio-link" href="${href}" target="_blank" rel="noopener" onclick="event.stopPropagation()">View →</a>`;
+}
+
+// ── FETCH ──
+async function fetchTable(table, select = '*') {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=${select}&limit=1000`, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Range': '0-999' }
+  });
+  if (!res.ok) throw new Error(`Failed to fetch ${table}: ${res.status}`);
+  return res.json();
+}
+
+async function loadAll() {
+  document.getElementById('last-loaded').textContent = '…';
+  document.getElementById('sub-table-wrap').innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
+  document.getElementById('leg-table-wrap').innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
+  try {
+    const [submissions, legacy] = await Promise.all([
+      fetchTable('form_submissions', 'id,submitted_at,checkout_completed_at,name,email,organisation_name,organisation_type,country,form_name,source_site,license_type,film_cut,group_size,valid_window,screening_date,promo_applied,stripe_price_id,stripe_event_id,forwarded,forward_status,wonder_redemption_code,wonder_redemption_code_id,redirect_url,payload'),
+      fetchTable('limelight_legacy_registrations')
+    ]);
+    allSubmissions = submissions.sort((a,b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+    allLegacy = legacy.sort((a,b) => new Date(b.registered_at||0) - new Date(a.registered_at||0));
+    await loadCioIds();
+    updateStats(); populateFilters(); filterSubmissions(); filterLegacy();
+    document.getElementById('nav-sub-count').textContent = allSubmissions.length;
+    document.getElementById('nav-leg-count').textContent = allLegacy.length;
+    document.getElementById('last-loaded').textContent = new Date().toLocaleTimeString('en-AU', { hour:'2-digit', minute:'2-digit' });
+  } catch(err) {
+    const e = `<div class="error-box">⚠️ ${err.message}</div>`;
+    document.getElementById('sub-table-wrap').innerHTML = e;
+    document.getElementById('leg-table-wrap').innerHTML = e;
+    document.getElementById('last-loaded').textContent = 'Error';
+  }
+}
+
+function updateStats() {
+  const paid = allSubmissions.filter(s => s.checkout_completed_at).length;
+  const legPaid = allLegacy.filter(l => l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'))).length;
+  document.getElementById('stat-total').textContent   = allSubmissions.length;
+  document.getElementById('stat-paid').textContent    = paid;
+  document.getElementById('stat-pending').textContent = allSubmissions.length - paid;
+  document.getElementById('stat-legacy').textContent  = allLegacy.length;
+  document.getElementById('stat-legacy-paid').textContent = legPaid;
+}
+
+function populateFilters() {
+  const films = [...new Set(allSubmissions.map(s => s.form_name).filter(Boolean))].sort();
+  const filmSel = document.getElementById('sub-film');
+  filmSel.innerHTML = '<option value="">All Films</option>';
+  films.forEach(f => { const o = document.createElement('option'); o.value=f; o.textContent=filmLabel(f); filmSel.appendChild(o); });
+
+  [...new Set(allSubmissions.map(s=>s.country).filter(Boolean))].sort().forEach(c => {
+    const o = document.createElement('option'); o.value=c; o.textContent=c;
+    document.getElementById('sub-country').appendChild(o);
+  });
+
+  [...new Set(allLegacy.map(l=>l.country).filter(Boolean))].sort().forEach(c => {
+    const o = document.createElement('option'); o.value=c; o.textContent=c;
+    document.getElementById('leg-country').appendChild(o);
+  });
+}
+
+function filmLabel(n) {
+  return {'TFH-License-Form':'The First Hymn','TH-License-Form':'The Hopeful','LL-License-Form':'Limelight','LL-Education-License':'Limelight (Education)','TBOJ-Host-Form':'The Book of Job'}[n]||n;
+}
+
+function filterSubmissions() {
+  const q       = document.getElementById('sub-search').value.toLowerCase();
+  const film    = document.getElementById('sub-film').value;
+  const status  = document.getElementById('sub-status').value;
+  const country = document.getElementById('sub-country').value;
+  const dateVal = document.getElementById('sub-date').value;
+  const bounds  = dateRangeBounds(dateVal, 'sub-date-from', 'sub-date-to');
+
+  filteredSubmissions = allSubmissions.filter(s => {
+    if (q && ![s.name,s.email,s.organisation_name].join(' ').toLowerCase().includes(q)) return false;
+    if (film    && s.form_name !== film)   return false;
+    if (country && s.country  !== country) return false;
+    if (status === 'paid'    && !s.checkout_completed_at) return false;
+    if (status === 'pending' &&  s.checkout_completed_at) return false;
+    if (dateVal && !inDateRange(s.submitted_at, bounds))   return false;
+    return true;
+  });
+  subPage = 1; renderSubmissionsTable();
+}
+
+function filterLegacy() {
+  const q       = document.getElementById('leg-search').value.toLowerCase();
+  const status  = document.getElementById('leg-status').value;
+  const country = document.getElementById('leg-country').value;
+  const dateVal = document.getElementById('leg-date').value;
+  const bounds  = dateRangeBounds(dateVal, 'leg-date-from', 'leg-date-to');
+
+  filteredLegacy = allLegacy.filter(l => {
+    if (q && ![l.name,l.email,l.school_name].join(' ').toLowerCase().includes(q)) return false;
+    if (country && l.country !== country) return false;
+    const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
+    if (status === 'paid'   && !isPaid) return false;
+    if (status === 'unpaid' &&  isPaid) return false;
+    if (dateVal && !inDateRange(l.registered_at, bounds)) return false;
+    return true;
+  });
+  legPage = 1; renderLegacyTable();
+}
+
+function renderSubmissionsTable() {
+  const wrap = document.getElementById('sub-table-wrap');
+  const total = filteredSubmissions.length;
+  document.getElementById('sub-results-count').textContent = `${total} result${total!==1?'s':''}`;
+  if (!total) { wrap.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>No submissions match your filters</p></div>'; document.getElementById('sub-pagination').innerHTML=''; return; }
+  const rows = filteredSubmissions.slice((subPage-1)*PAGE_SIZE, subPage*PAGE_SIZE);
+  let html = `<table><thead><tr>
+    <th>Name / Org</th><th>Email</th><th>Film</th><th>Licence Type</th>
+    <th>Country</th><th>Status</th><th>Emails</th><th>Submitted</th>
+  </tr></thead><tbody>`;
+  rows.forEach(s => {
+    const paid = !!s.checkout_completed_at;
+    const badge = paid ? '<span class="badge badge-green">Paid</span>' : '<span class="badge badge-orange">Pending</span>';
+    html += `<tr onclick="openSubmissionModal('${s.id}')">
+      <td class="td-name">
+        <div>${esc(s.name||'—')}</div>
+        <div style="font-size:11px;color:var(--text-sub);margin-top:2px;font-weight:400;">${esc(s.organisation_name||'')}</div>
+        <div class="mob-row-footer">${badge}<span style="font-size:11px;color:var(--text-sub);">${s.submitted_at?fmtDate(s.submitted_at):'—'}</span></div>
+      </td>
+      <td class="mob-hide">${esc(s.email||'—')}</td>
+      <td class="mob-hide">${esc(filmLabel(s.form_name||''))}</td>
+      <td class="mob-hide" style="max-width:150px;">${esc(s.license_type||'—')}</td>
+      <td class="mob-hide">${esc(s.country||'—')}</td>
+      <td class="mob-hide">${badge}</td>
+      <td class="mob-hide">${cioLink(s.email)}</td>
+      <td class="mob-hide td-date">${s.submitted_at ? fmtDate(s.submitted_at) : '—'}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+  renderPagination('sub', total, subPage, n => { subPage=n; renderSubmissionsTable(); });
+}
+
+function renderLegacyTable() {
+  const wrap = document.getElementById('leg-table-wrap');
+  const total = filteredLegacy.length;
+  document.getElementById('leg-results-count').textContent = `${total} result${total!==1?'s':''}`;
+  if (!total) { wrap.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>No registrations match your filters</p></div>'; document.getElementById('leg-pagination').innerHTML=''; return; }
+  const rows = filteredLegacy.slice((legPage-1)*PAGE_SIZE, legPage*PAGE_SIZE);
+  let html = `<table><thead><tr>
+    <th>Name</th><th>Email</th><th>School / Org</th><th>Type</th>
+    <th>Country</th><th>Entries</th><th>Status</th><th>Emails</th><th>Registered</th>
+  </tr></thead><tbody>`;
+  rows.forEach(l => {
+    const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
+    const badge = isPaid ? '<span class="badge badge-green">Paid</span>' :
+      (l.status && l.status.toLowerCase().includes('not paid') ? '<span class="badge badge-red">Not Paid</span>' :
+      `<span class="badge badge-grey">${esc(l.status||'—')}</span>`);
+    html += `<tr onclick="openLegacyModal('${l.id}')">
+      <td class="td-name">
+        <div>${esc(l.name||'—')}</div>
+        <div style="font-size:11px;color:var(--text-sub);margin-top:2px;font-weight:400;">${esc(l.school_name||'')}</div>
+        <div class="mob-row-footer">${badge}<span style="font-size:11px;color:var(--text-sub);">${l.registered_at?fmtDate(l.registered_at):'—'}</span></div>
+      </td>
+      <td class="mob-hide">${esc(l.email||'—')}</td>
+      <td class="mob-hide">${esc(l.school_name||'—')}</td>
+      <td class="mob-hide">${esc(l.school_type||'—')}</td>
+      <td class="mob-hide">${esc(l.country||'—')}</td>
+      <td class="mob-hide">${l.entries_used??0} / ${l.entries_bought??0}</td>
+      <td class="mob-hide">${badge}</td>
+      <td class="mob-hide">${cioLink(l.email)}</td>
+      <td class="mob-hide td-date">${l.registered_at ? fmtDate(l.registered_at) : '—'}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+  renderPagination('leg', total, legPage, n => { legPage=n; renderLegacyTable(); });
+}
+
+function renderPagination(id, total, current, onPage) {
+  const pages = Math.ceil(total / PAGE_SIZE);
+  const el = document.getElementById(`${id}-pagination`);
+  if (pages <= 1) { el.innerHTML=''; return; }
+  el.innerHTML = `<button class="page-btn" onclick="(${onPage.toString()})(${current-1})" ${current===1?'disabled':''}>‹ Prev</button><span class="page-info">Page ${current} of ${pages}</span><button class="page-btn" onclick="(${onPage.toString()})(${current+1})" ${current===pages?'disabled':''}>Next ›</button>`;
+}
+
+async function openSubmissionModal(id) {
+  const s = allSubmissions.find(x => x.id===id); if (!s) return;
+  const paid = !!s.checkout_completed_at;
+  const badge = paid ? '<span class="badge badge-green">Paid</span>' : '<span class="badge badge-orange">Pending Payment</span>';
+  document.getElementById('modal-title').textContent = s.name || 'Submission Details';
+  const cioHref = s.email ? `https://fly.customer.io/workspaces/${CIO_WS}/journeys/people/${cioIdent(s.email)}/sent` : null;
+
+  // Payload fields — render nicely
+  let payloadHtml = '';
+  if (s.payload && typeof s.payload === 'object') {
+    const skip = new Set(['film','form-id','event_key']);
+    const entries = Object.entries(s.payload).filter(([k,v]) => !skip.has(k) && v !== null && v !== '' && v !== false);
+    if (entries.length) {
+      payloadHtml = `<div class="detail-group"><div class="detail-group-title">Form Data</div>`;
+      entries.forEach(([k,v]) => { payloadHtml += dr(k.replace(/-/g,' ').replace(/_/g,' '), v); });
+      payloadHtml += '</div>';
+    }
+  }
+
+  // Wonder code — fetch live
+  let wonderHtml = '';
+  if (s.wonder_redemption_code_id) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/wonder_redemption_codes?id=eq.${s.wonder_redemption_code_id}&select=code,redemptions_bought,redemptions_available,redemptions_used,license_type,created_at`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      const codes = await res.json();
+      if (codes && codes[0]) {
+        const c = codes[0];
+        wonderHtml = `<div class="detail-group"><div class="detail-group-title">Wonder Redemption Code</div>
+          ${dr('Code', `<span style="font-family:monospace;font-size:14px;font-weight:700;color:var(--fire);letter-spacing:0.1em">${esc(c.code)}</span>`)}
+          ${dr('Redemptions Bought', c.redemptions_bought)}
+          ${dr('Redemptions Available', c.redemptions_available)}
+          ${dr('Redemptions Used', c.redemptions_used)}
+          ${dr('Licence Type', c.license_type)}
+          ${dr('Created', c.created_at ? fmtDateFull(c.created_at) : '—')}
+        </div>`;
+      }
+    } catch(e) { /* silent */ }
+  } else if (s.wonder_redemption_code) {
+    wonderHtml = `<div class="detail-group"><div class="detail-group-title">Wonder Code</div>${dr('Code', s.wonder_redemption_code)}</div>`;
+  }
+
+  // Redirect URL
+  const redirectHtml = s.redirect_url
+    ? `<div class="detail-group"><div class="detail-group-title">Redirect</div><div class="detail-row"><div class="detail-key">Checkout URL</div><div class="detail-val" style="word-break:break-all"><a href="${esc(s.redirect_url)}" target="_blank" style="color:var(--fire);text-decoration:none;font-size:12px;">${esc(s.redirect_url)}</a></div></div></div>`
+    : '';
+
+  document.getElementById('modal-body').innerHTML = `
+    <div style="margin-bottom:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">${badge}${cioHref ? `<a href="${cioHref}" target="_blank" class="cio-link" style="font-size:13px;">View Email Deliveries →</a>` : ''}</div>
+    <div class="detail-group"><div class="detail-group-title">Contact</div>
+      ${dr('Name',s.name)}${dr('Email',s.email)}${dr('Organisation',s.organisation_name)}${dr('Org Type',s.organisation_type)}${dr('Country',s.country)}</div>
+    <div class="detail-group"><div class="detail-group-title">Licence</div>
+      ${dr('Film',filmLabel(s.form_name))}${dr('Source Site',s.source_site)}${dr('Licence Type',s.license_type)}${dr('Film Cut',s.film_cut)}${dr('Group Size',s.group_size)}${dr('Valid Window',s.valid_window)}${dr('Screening Date',s.screening_date)}${dr('Promo Applied',s.promo_applied?'Yes':'No')}</div>
+    ${wonderHtml}
+    ${redirectHtml}
+    <div class="detail-group"><div class="detail-group-title">Payment</div>
+      ${dr('Submitted',s.submitted_at?fmtDateFull(s.submitted_at):'—')}${dr('Checkout Completed',s.checkout_completed_at?fmtDateFull(s.checkout_completed_at):'Not completed')}${dr('Stripe Event',s.stripe_event_id,true)}${dr('Stripe Price ID',s.stripe_price_id,true)}</div>
+    ${payloadHtml}
+    <div class="detail-group"><div class="detail-group-title">System</div>
+      ${dr('ID',s.id,true)}${dr('Forwarded',s.forwarded?'Yes':'No')}${dr('Forward Status',s.forward_status)}</div>`;
+  openModal();
+}
+
+function openLegacyModal(id) {
+  const l = allLegacy.find(x => x.id===id); if (!l) return;
+  const isPaid = l.paid_at || (l.status && l.status.toLowerCase().includes('paid') && !l.status.toLowerCase().includes('not'));
+  const badge = isPaid ? '<span class="badge badge-green">Paid</span>' :
+    (l.status && l.status.toLowerCase().includes('not paid') ? '<span class="badge badge-red">Not Paid</span>' :
+    `<span class="badge badge-grey">${esc(l.status||'—')}</span>`);
+  document.getElementById('modal-title').textContent = l.name || 'Legacy Registration';
+  const cioHref = l.email ? `https://fly.customer.io/workspaces/${CIO_WS}/journeys/people/${cioIdent(l.email)}/sent` : null;
+  document.getElementById('modal-body').innerHTML = `
+    <div style="margin-bottom:18px;display:flex;gap:10px;align-items:center;">${badge}${cioHref ? `<a href="${cioHref}" target="_blank" class="cio-link" style="font-size:13px;">View Email Deliveries →</a>` : ''}</div>
+    <div class="detail-group"><div class="detail-group-title">Contact</div>
+      ${dr('Name',l.name)}${dr('Email',l.email)}${dr('School / Org',l.school_name)}${dr('School Type',l.school_type)}${dr('Country',l.country)}${dr('Address',l.address)}</div>
+    <div class="detail-group"><div class="detail-group-title">Licence Usage</div>
+      ${dr('Entries Bought',l.entries_bought)}${dr('Entries Used',l.entries_used)}${dr('Status',l.status)}${dr('Wonder Code',l.wonder_redemption_code)}${dr('Promo Code Used',l.promo_code_used)}</div>
+    <div class="detail-group"><div class="detail-group-title">Payment</div>
+      ${dr('Registered At',l.registered_at?fmtDateFull(l.registered_at):'—')}${dr('Paid At',l.paid_at?fmtDateFull(l.paid_at):'Not paid')}${dr('Stripe Session',l.stripe_session_id,true)}${dr('Stripe Event',l.stripe_event_id,true)}</div>
+    <div class="detail-group"><div class="detail-group-title">System</div>
+      ${dr('ID',l.id,true)}${dr('Event Key',l.event_key,true)}${dr('School Key',l.school_key,true)}</div>`;
+  openModal();
+}
+
+function dr(label, value, mono=false) {
+  const display = (value===null||value===undefined||value==='') ? '<span style="color:var(--text-sub)">—</span>' : esc(String(value));
+  return `<div class="detail-row"><div class="detail-key">${label}</div><div class="detail-val${mono?' mono':''}">${display}</div></div>`;
+}
+
+function openModal()  { document.getElementById('modal-overlay').classList.add('open');    document.body.style.overflow='hidden'; }
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
+function closeModalOnBg(e) { if (e.target===document.getElementById('modal-overlay')) closeModal(); }
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
+
+function switchTab(tab) {
+  document.getElementById('tab-submissions').classList.toggle('tab-hidden', tab!=='submissions');
+  document.getElementById('tab-legacy').classList.toggle('tab-hidden', tab!=='legacy');
+  document.getElementById('nav-submissions').classList.toggle('active', tab==='submissions');
+  document.getElementById('nav-legacy').classList.toggle('active', tab==='legacy');
+  document.getElementById('page-title').textContent = tab==='submissions' ? 'Licence Submissions' : 'Legacy Registrations (Limelight)';
+  closeDrawer();
+}
+
+function toggleDrawer() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('drawer-overlay');
+  const isOpen = sidebar.classList.contains('open');
+  sidebar.classList.toggle('open', !isOpen);
+  overlay.classList.toggle('open', !isOpen);
+}
+
+function closeDrawer() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+
+const origToggleTheme = toggleTheme;
+toggleTheme = function() {
+  isDark = !isDark;
+  document.body.classList.toggle('light', !isDark);
+  const icon = isDark ? '☀️' : '🌙';
+  const label = isDark ? 'Light' : 'Dark';
+  ['theme-icon','theme-icon-mob'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = icon; });
+  const lbl = document.getElementById('theme-label'); if(lbl) lbl.textContent = label;
+};
+
+function esc(s) {
+  if (!s && s!==0) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtDate(iso) {
+  return new Date(iso).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
+}
+function fmtDateFull(iso) {
+  return new Date(iso).toLocaleString('en-AU', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+
+loadAll();
+</script>
+</body>
+</html>
